@@ -1,0 +1,14 @@
+# Python / OS / Scratch
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Heavy / Brand-Specific Local Test Sandboxes (excluded from public repo)
+projects/nike-runway/
+projects/tondo-forno/

@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertix — Modern Financial Dashboard V14</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    :root {
+      --bg-canvas: #F5F4F1;
+      --bg-surface: #FFFFFF;
+      --bg-well: #F8F7F4;
+      --bg-pill-muted: #F3F2EE;
+      --text-main: #18181B;
+      --text-secondary: #767570;
+      --text-muted: #A09E97;
+      --border-soft: rgba(24, 24, 27, 0.055);
+      --border-input: #E8E6E0;
+      --shadow-card: 0 4px 22px -2px rgba(20, 20, 18, 0.035);
+      --shadow-pill: 0 2px 12px rgba(20, 20, 18, 0.04);
+      --brand-coral: #E05838;
+      --brand-coral-soft: #F9EAE5;
+      --brand-ink: #18181B;
+      --color-green: #2E9E6B;
+      --color-green-bg: rgba(46, 158, 107, 0.12);
+      --color-blue: #5B86F0;
+      --color-purple: #9E67F0;
+      --color-amber: #E5A93C;
+    }
+
+    html.dark {
+      --bg-canvas: #111113;
+      --bg-surface: #19191C;
+      --bg-well: #222226;
+      --bg-pill-muted: #26262B;
+      --text-main: #F5F4F1;
+      --text-secondary: #98979F;
+      --text-muted: #68676F;
+      --border-soft: rgba(255, 255, 255, 0.07);
+      --border-input: #2E2E34;
+      --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
+      --shadow-pill: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --brand-coral-soft: rgba(224, 88, 56, 0.16);
+      --brand-ink: #F5F4F1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    button, input {
+      font-family: inherit;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--brand-coral);
+      outline-offset: 2px;
+    }
+
+    /* =========================================================================
+       OUTER FRAME & TOP NAVIGATION BAR
+    ========================================================================== */
+    .vertix-wrapper {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 18px 28px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    /* Left Brand Pill */
+    .brand-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-pill);
+      border-radius: 999px;
+      padding: 5px 15px 5px 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+    }
+
+    .brand-logo-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: var(--brand-coral);
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-text {
+      font-size: 14.5px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* Center Navigation Pill Track */
+    .center-nav-pill {
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-pill);
+      border-radius: 999px;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      user-select: none;
+    }
+
+    .top-nav-btn {
+      position: relative;
+      z-index: 10;
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .top-nav-btn:hover {
+      color: var(--text-main);
+    }
+
+    .top-nav-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--brand-ink);
+      color: var(--bg-surface);
+      clip-path: inset(4px 450px 4px 4px round 999px);
+      transition: opacity 0.2s ease;
+    }
+
+    .top-nav-overlay .top-nav-btn {
+      color: var(--bg-surface);
+    }
+
+    /* Right Utility & User Pills */
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .util-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-pill);
+      border-radius: 999px;
+      padding: 4px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .util-icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      position: relative;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .util-icon-btn:hover {
+      background: var(--bg-pill-muted);
+      color: var(--text-main);
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--brand-coral);
+      border: 1px solid var(--bg-surface);
+    }
+
+    .profile-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-pill);
+      border-radius: 999px;
+      padding: 4px 12px 4px 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .profile-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2E3440 0%, #18181B 100%);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-name {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .profile-email {
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.15;
+    }
+
+    /* =========================================================================
+       BODY WORKSPACE: LEFT VERTICAL PILL SIDEBAR + MAIN STAGE
+    ========================================================================== */
+    .workspace-body {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .workspace-body { grid-template-columns: 1fr; }
+      .left-sidebar-stack { display: none; }
+      .center-nav-pill { display: none; }
+    }
+
+    .left-sidebar-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 20px;
+    }
+
+    .side-pill-group {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-pill);
+      border-radius: 999px;
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .side-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .side-icon-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-pill-muted);
+    }
+
+    .side-icon-btn.active {
+      background: var(--brand-ink);
+      color: var(--bg-surface);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+    }
+
+    /* =========================================================================
+       SHARED STAGE HEADER & CARDS
+    ========================================================================== */
+    .stage-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stage-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .stage-subtitle {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-top: 5px;
+    }
+
+    .char-fade {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+
+    .btn-dark-pill {
+      background: var(--brand-ink);
+      color: var(--bg-surface);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-dark-pill:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .v-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      border-radius: 22px;
+      padding: 22px;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.3s ease;
+    }
+
+    .v-well {
+      background: var(--bg-well);
+      border-radius: 16px;
+      padding: 16px 18px;
+    }
+
+    .badge-green {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+      background: var(--color-green-bg);
+      color: var(--color-green);
+    }
+
+    /* =========================================================================
+       SCREEN 1: CONTACTS (1:1 WITH SCREENSHOT & FRAME 00:05)
+    ========================================================================== */
+    .qt-card {
+      display: grid;
+      grid-template-columns: 1.12fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    @media (max-width: 1024px) {
+      .qt-card { grid-template-columns: 1fr; }
+    }
+
+    .qt-avatars-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .qt-person {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .qt-ring {
+      padding: 3px;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .qt-person.selected .qt-ring {
+      border-color: var(--brand-coral);
+      transform: scale(1.05);
+    }
+
+    .qt-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qt-avatar-dashed {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      border: 1.5px dashed var(--border-input);
+      color: var(--text-secondary);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qt-person-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .qt-person.selected .qt-person-label {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .qt-input-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-input);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0;
+    }
+
+    .qt-amount-field {
+      font-size: 22px;
+      font-weight: 700;
+      width: 140px;
+      color: var(--text-main);
+    }
+
+    .qt-presets {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .qt-preset-btn {
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      color: var(--text-secondary);
+      transition: background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), color 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .qt-preset-btn.active {
+      background: var(--brand-ink);
+      color: var(--bg-surface);
+    }
+
+    .qt-send-btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: 999px;
+      background: var(--brand-ink);
+      color: var(--bg-surface);
+      font-size: 12.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.2s ease, transform 0.15s ease;
+    }
+
+    .qt-send-btn:hover {
+      opacity: 0.92;
+    }
+
+    /* Filter strip & 5 Contact Cards */
+    .contacts-toolbar {
+      margin: 18px 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-pill-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-pill-btn.active {
+      background: var(--brand-ink);
+      color: var(--bg-surface);
+    }
+
+    .search-pill-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 7px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 220px;
+    }
+
+    .contacts-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 1140px) {
+      .contacts-grid-5 { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .contacts-grid-5 { grid-template-columns: repeat(1, 1fr); }
+    }
+
+    .contact-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      border-radius: 20px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s ease;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .star-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 14px;
+      color: #D4D2CD;
+    }
+
+    .star-btn.fav {
+      color: #F59E0B;
+    }
+
+    .contact-type-tag {
+      margin-top: 8px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--bg-pill-muted);
+      color: var(--text-secondary);
+    }
+
+    .contact-foot {
+      width: 100%;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-soft);
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* =========================================================================
+       SCREEN 2: SAVINGS & GOALS (1:1 WITH FRAME 00:00 & 00:06)
+    ========================================================================== */
+    .savings-top-grid {
+      display: grid;
+      grid-template-columns: 1.42fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 1024px) {
+      .savings-top-grid { grid-template-columns: 1fr; }
+    }
+
+    .toggle-row {
+      background: var(--bg-well);
+      border-radius: 14px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .switch-pill {
+      width: 36px;
+      height: 20px;
+      border-radius: 999px;
+      background: #D6D4CE;
+      padding: 2px;
+      position: relative;
+      transition: background-color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .switch-pill.on {
+      background: var(--brand-coral);
+    }
+
+    .switch-knob {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #FFFFFF;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .switch-pill.on .switch-knob {
+      transform: translateX(16px);
+    }
+
+    .goal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .goal-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .goal-add-btn {
+      width: 100%;
+      margin-top: 14px;
+      padding: 8px;
+      border-radius: 999px;
+      background: var(--bg-well);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: background-color 0.2s ease;
+    }
+
+    .goal-add-btn:hover {
+      background: var(--brand-coral);
+      color: #FFFFFF;
+    }
+
+    /* =========================================================================
+       SCREEN 3: MANAGE CARDS (1:1 WITH FRAME 00:01 & 00:08)
+    ========================================================================== */
+    .manage-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 1024px) {
+      .manage-grid { grid-template-columns: 1fr; }
+    }
+
+    .credit-card-scene {
+      perspective: 1100px;
+      max-width: 390px;
+      margin: 18px auto 8px;
+    }
+
+    .credit-card-3d {
+      width: 100%;
+      aspect-ratio: 1.586 / 1;
+      border-radius: 20px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      background: radial-gradient(circle at 82% 24%, rgba(224, 88, 56, 0.38), transparent 55%),
+                  linear-gradient(135deg, #2D2B29 0%, #161514 100%);
+      color: #FFFFFF;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 18px 38px -10px rgba(20, 18, 16, 0.35);
+      overflow: hidden;
+    }
+
+    .credit-card-3d.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .credit-card-3d.frozen {
+      filter: saturate(0.25) brightness(1.08);
+    }
+
+    .card-chip {
+      width: 38px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #F0C165 0%, #C9933B 100%);
+    }
+
+    .card-action-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .card-act-btn {
+      background: var(--bg-well);
+      border-radius: 14px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), color 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-act-btn:hover, .card-act-btn.active {
+      background: var(--brand-ink);
+      color: var(--bg-surface);
+    }
+
+    /* =========================================================================
+       SCREEN 4: OVERVIEW (1:1 WITH FRAME 00:03 & 002915.mp4 FRAME 00:02)
+    ========================================================================== */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.05fr 1.35fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 1120px) {
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+
+    .coral-stat-card {
+      background: linear-gradient(165deg, #E86A4A 0%, #D64E2E 100%);
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 176px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blush-stat-card {
+      background: var(--brand-coral-soft);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 176px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="vertix-wrapper">
+
+    <!-- =======================================================================
+         TOP NAVIGATION BAR (Brand Pill + Center Module Pill + Right Profile)
+    ======================================================================== -->
+    <header class="topbar">
+      <div class="brand-pill" id="brand-home-trigger">
+        <div class="brand-logo-circle">V</div>
+        <span class="brand-text">Vertix</span>
+      </div>
+
+      <nav class="center-nav-pill" id="top-nav-box" aria-label="Primary Navigation">
+        <button class="top-nav-btn" data-screen="overview">Overview</button>
+        <button class="top-nav-btn" data-screen="contacts">Activity</button>
+        <button class="top-nav-btn" data-screen="manage">Manage</button>
+        <button class="top-nav-btn" data-screen="savings">Program</button>
+        <button class="top-nav-btn" data-screen="contacts">Account</button>
+        <button class="top-nav-btn" data-screen="savings">Reports</button>
+
+        <div class="top-nav-overlay" id="top-nav-pill" aria-hidden="true">
+          <div class="top-nav-btn">Overview</div>
+          <div class="top-nav-btn">Activity</div>
+          <div class="top-nav-btn">Manage</div>
+          <div class="top-nav-btn">Program</div>
+          <div class="top-nav-btn">Account</div>
+          <div class="top-nav-btn">Reports</div>
+        </div>
+      </nav>
+
+      <div class="topbar-right">
+        <div class="util-pill">
+          <button class="util-icon-btn" aria-label="Search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+          </button>
+          <button class="util-icon-btn" aria-label="Notifications">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="notif-dot"></span>
+          </button>
+          <button class="util-icon-btn" aria-label="Help">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <div class="profile-pill">
+          <div class="profile-avatar">CX</div>
+          <div>
+            <div class="profile-name">Code XR</div>
+            <div class="profile-email">hello@codexr.studio</div>
+          </div>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.45"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <!-- =======================================================================
+         WORKSPACE BODY (Left Floating Pill Sidebar + Main Dynamic Stage)
+    ======================================================================== -->
+    <div class="workspace-body">
+
+      <!-- LEFT VERTICAL PILL SIDEBAR -->
+      <aside class="left-sidebar-stack" aria-label="Sidebar Navigation">
+        <!-- Theme Switcher Pill -->
+        <div class="side-pill-group">
+          <button class="side-icon-btn active" id="theme-sun-btn" aria-label="Light Mode">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round"/></svg>
+          </button>
+          <button class="side-icon-btn" id="theme-moon-btn" aria-label="Dark Mode">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <!-- Primary 7-Icon Navigation Pill -->
+        <div class="side-pill-group">
+          <button class="side-icon-btn side-nav-trigger" data-screen="overview" aria-label="Overview Dashboard" title="Overview">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          </button>
+          <button class="side-icon-btn side-nav-trigger" data-screen="manage" aria-label="Manage Cards" title="Manage Cards">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          </button>
+          <button class="side-icon-btn side-nav-trigger" data-screen="overview" aria-label="Analytics" title="Analytics">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6" stroke-linecap="round"/></svg>
+          </button>
+          <button class="side-icon-btn side-nav-trigger" data-screen="contacts" aria-label="Transfers" title="Quick Transfers">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="side-icon-btn side-nav-trigger active" data-screen="contacts" aria-label="Contacts" title="Contacts">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round"/></svg>
+          </button>
+          <button class="side-icon-btn side-nav-trigger" data-screen="savings" aria-label="Savings & Goals" title="Savings & Goals">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button class="side-icon-btn side-nav-trigger" data-screen="manage" aria-label="Settings" title="Settings">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          </button>
+        </div>
+
+        <!-- Bottom Help / Logout Pill -->
+        <div class="side-pill-group">
+          <button class="side-icon-btn" aria-label="Support">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg>
+          </button>
+          <button class="side-icon-btn" aria-label="Log out">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN DYNAMIC STAGE -->
+      <main id="vertix-stage">
+
+        <!-- Stage Header (Shared Dynamic Title + Subtitle + Primary CTA) -->
+        <div class="stage-header">
+          <div>
+            <h1 class="stage-title" id="stage-title">Contacts</h1>
+            <p class="stage-subtitle" id="stage-subtitle">The people and businesses you pay the most, one tap away.</p>
+          </div>
+          <button class="btn-dark-pill" id="stage-cta-btn">
+            <span>+</span>
+            <span id="stage-cta-label">Add contact</span>
+          </button>
+        </div>
+
+        <!-- ===================================================================
+             SCREEN 1: CONTACTS (DEFAULT OPEN — MATCHES UPLOADED SCREENSHOT 1:1)
+        ==================================================================== -->
+        <section id="screen-contacts" class="vertix-screen">
+          <!-- Quick Transfer Card -->
+          <div class="v-card qt-card">
+            <div>
+              <div style="font-size: 15px; font-weight: 700;">Quick transfer</div>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px;">Pick a favourite, choose an amount, done.</div>
+
+              <div class="qt-avatars-row">
+                <div class="qt-person selected" data-name="Ayesha Khan" data-initials="AK" data-color="#F29B7E">
+                  <div class="qt-ring">
+                    <div class="qt-avatar" style="background: #F29B7E;">AK</div>
+                  </div>
+                  <span class="qt-person-label">Ayesha</span>
+                </div>
+
+                <div class="qt-person" data-name="Rafiq Ahmed" data-initials="RA" data-color="#6B93F2">
+                  <div class="qt-ring">
+                    <div class="qt-avatar" style="background: #6B93F2;">RA</div>
+                  </div>
+                  <span class="qt-person-label">Rafiq</span>
+                </div>
+
+                <div class="qt-person" data-name="Pixel Studio" data-initials="PS" data-color="#A46BF2">
+                  <div class="qt-ring">
+                    <div class="qt-avatar" style="background: #A46BF2;">PS</div>
+                  </div>
+                  <span class="qt-person-label">Pixel</span>
+                </div>
+
+                <div class="qt-person" data-name="Tanvir Hasan" data-initials="TH" data-color="#E6B44C">
+                  <div class="qt-ring">
+                    <div class="qt-avatar" style="background: #E6B44C;">TH</div>
+                  </div>
+                  <span class="qt-person-label">Tanvir</span>
+                </div>
+
+                <div class="qt-person" data-name="New Recipient" data-initials="+" data-color="#767570">
+                  <div class="qt-ring">
+                    <div class="qt-avatar-dashed">+</div>
+                  </div>
+                  <span class="qt-person-label">New</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Transfer Well -->
+            <div class="v-well">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div id="qt-target-avatar" style="width: 30px; height: 30px; border-radius: 999px; background: #F29B7E; color: #FFFFFF; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">AK</div>
+                <div>
+                  <div style="font-size: 10px; color: var(--text-secondary);">Sending to</div>
+                  <div style="font-size: 12.5px; font-weight: 700;" id="qt-target-name">Ayesha Khan</div>
+                </div>
+              </div>
+
+              <div class="qt-input-box">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 18px; font-weight: 600; color: var(--text-secondary);">$</span>
+                  <input type="number" id="qt-amount-input" class="qt-amount-field tabular-nums" value="100" aria-label="Transfer amount in USD">
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">USD</span>
+              </div>
+
+              <div class="qt-presets">
+                <button class="qt-preset-btn tabular-nums" data-amt="50">$50</button>
+                <button class="qt-preset-btn active tabular-nums" data-amt="100">$100</button>
+                <button class="qt-preset-btn tabular-nums" data-amt="250">$250</button>
+                <button class="qt-preset-btn tabular-nums" data-amt="500">$500</button>
+              </div>
+
+              <button class="qt-send-btn" id="qt-send-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="tabular-nums" id="qt-send-label">Send $100.00</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Search Row -->
+          <div class="contacts-toolbar">
+            <div class="filter-pills">
+              <button class="filter-pill-btn active" data-cfilter="all">
+                <span>All</span>
+                <span class="tabular-nums" style="opacity:0.7">10</span>
+              </button>
+              <button class="filter-pill-btn" data-cfilter="fav">
+                <span>Favourites</span>
+                <span class="tabular-nums" style="opacity:0.7">4</span>
+              </button>
+              <button class="filter-pill-btn" data-cfilter="business">
+                <span>Businesses</span>
+                <span class="tabular-nums" style="opacity:0.7">4</span>
+              </button>
+            </div>
+
+            <div class="search-pill-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+              <input type="text" id="contact-search-input" placeholder="Search contacts" style="font-size: 12px; width: 100%;" aria-label="Search contacts">
+            </div>
+          </div>
+
+          <!-- 5 Contact Cards Grid -->
+          <div class="contacts-grid-5" id="contacts-cards-grid">
+            <article class="contact-card" data-cat="person" data-fav="true" data-name="Ayesha Khan">
+              <button class="star-btn fav" aria-label="Favourite">★</button>
+              <div class="qt-avatar" style="background: #F29B7E; width: 46px; height: 46px;">AK</div>
+              <div style="font-size: 13.5px; font-weight: 700; margin-top: 10px;">Ayesha Khan</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">@ayesha.k</div>
+              <span class="contact-type-tag">Person</span>
+              <div class="contact-foot">
+                <div class="tabular-nums">Northstar Bank •• 4410</div>
+                <div class="tabular-nums">Last sent <strong style="color:var(--text-main)">$250</strong> · 12 Apr</div>
+              </div>
+            </article>
+
+            <article class="contact-card" data-cat="person" data-fav="true" data-name="Rafiq Ahmed">
+              <button class="star-btn fav" aria-label="Favourite">★</button>
+              <div class="qt-avatar" style="background: #6B93F2; width: 46px; height: 46px;">RA</div>
+              <div style="font-size: 13.5px; font-weight: 700; margin-top: 10px;">Rafiq Ahmed</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">@rafiq</div>
+              <span class="contact-type-tag">Person</span>
+              <div class="contact-foot">
+                <div class="tabular-nums">Harbor Savings •• 1189</div>
+                <div class="tabular-nums">Last sent <strong style="color:var(--text-main)">$1,200</strong> · 9 Apr</div>
+              </div>
+            </article>
+
+            <article class="contact-card" data-cat="business" data-fav="true" data-name="Pixel Studio">
+              <button class="star-btn fav" aria-label="Favourite">★</button>
+              <div class="qt-avatar" style="background: #A46BF2; width: 46px; height: 46px;">PS</div>
+              <div style="font-size: 13.5px; font-weight: 700; margin-top: 10px;">Pixel Studio</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">pixelstudio.co</div>
+              <span class="contact-type-tag">Business</span>
+              <div class="contact-foot">
+                <div class="tabular-nums">Meridian Credit •• 7731</div>
+                <div class="tabular-nums">Last sent <strong style="color:var(--text-main)">$3,400</strong> · 4 Apr</div>
+              </div>
+            </article>
+
+            <article class="contact-card" data-cat="person" data-fav="false" data-name="Nadia Islam">
+              <button class="star-btn" aria-label="Favourite">☆</button>
+              <div class="qt-avatar" style="background: #E86B58; width: 46px; height: 46px;">NI</div>
+              <div style="font-size: 13.5px; font-weight: 700; margin-top: 10px;">Nadia Islam</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">@nadia.i</div>
+              <span class="contact-type-tag">Person</span>
+              <div class="contact-foot">
+                <div class="tabular-nums">Northstar Bank •• 9012</div>
+                <div class="tabular-nums">Last sent <strong style="color:var(--text-main)">$80</strong> · 2 Apr</div>
+              </div>
+            </article>
+
+            <article class="contact-card" data-cat="business" data-fav="false" data-name="Green Leaf Cafe">
+              <button class="star-btn" aria-label="Favourite">☆</button>
+              <div class="qt-avatar" style="background: #5BB98B; width: 46px; height: 46px;">GL</div>
+              <div style="font-size: 13.5px; font-weight: 700; margin-top: 10px;">Green Leaf Café</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">greenleaf.cafe</div>
+              <span class="contact-type-tag">Business</span>
+              <div class="contact-foot">
+                <div class="tabular-nums">Harbor Savings •• 3302</div>
+                <div class="tabular-nums">Last sent <strong style="color:var(--text-main)">$64</strong> · 1 Apr</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             SCREEN 2: SAVINGS & GOALS (1:1 WITH VIDEO FRAME 00:00 & 00:06)
+        ==================================================================== -->
+        <section id="screen-savings" class="vertix-screen hidden">
+          <div class="savings-top-grid">
+            <!-- Left: Total saved + Monthly contributions -->
+            <div class="v-card" style="display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; align-items: space-between;">
+              <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 11.5px; color: var(--text-secondary);">Total saved</div>
+                  <div style="font-size: 34px; font-weight: 800; letter-spacing: -0.03em; margin: 6px 0 8px;" class="tabular-nums" id="sav-total-val">$20,529.27</div>
+                  <span class="badge-green tabular-nums">↑ +$1,420.00 this month · 4.2% APY</span>
+                </div>
+
+                <div style="margin-top: 26px;">
+                  <div style="height: 8px; border-radius: 99px; background: var(--bg-pill-muted); overflow: hidden;">
+                    <div id="sav-main-bar" style="width: 65%; height: 100%; background: var(--brand-coral); border-radius: 99px;"></div>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-secondary); margin-top: 7px;" class="tabular-nums">
+                    <strong>65%</strong> of $31,600.00 combined target across 5 goals
+                  </div>
+                </div>
+              </div>
+
+              <!-- Monthly contributions 6-bar chart -->
+              <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                  <span style="font-weight: 600;">Monthly contributions</span>
+                  <span style="color: var(--text-muted);">Last 6 months</span>
+                </div>
+
+                <div style="height: 116px; display: flex; align-items: flex-end; gap: 10px; padding-top: 14px;">
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end;">
+                    <div class="sav-bar" style="width:100%; height:52%; background:var(--brand-coral-soft); border-radius:6px;"></div>
+                    <span style="font-size:10px; color:var(--text-muted);">Nov</span>
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end;">
+                    <div class="sav-bar" style="width:100%; height:64%; background:var(--brand-coral-soft); border-radius:6px;"></div>
+                    <span style="font-size:10px; color:var(--text-muted);">Dec</span>
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end;">
+                    <div class="sav-bar" style="width:100%; height:46%; background:var(--brand-coral-soft); border-radius:6px;"></div>
+                    <span style="font-size:10px; color:var(--text-muted);">Jan</span>
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end;">
+                    <div class="sav-bar" style="width:100%; height:76%; background:var(--brand-coral-soft); border-radius:6px;"></div>
+                    <span style="font-size:10px; color:var(--text-muted);">Feb</span>
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end;">
+                    <div class="sav-bar" style="width:100%; height:68%; background:var(--brand-coral-soft); border-radius:6px;"></div>
+                    <span style="font-size:10px; color:var(--text-muted);">Mar</span>
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end;">
+                    <div class="sav-bar" style="width:100%; height:94%; background:var(--brand-coral); border-radius:6px;"></div>
+                    <span style="font-size:10px; font-weight:700;">Apr</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Auto-save rules -->
+            <div class="v-card">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                <div>
+                  <div style="font-size: 14.5px; font-weight: 700;">Auto-save</div>
+                  <div style="font-size: 11px; color: var(--text-secondary);">Set it once, save without thinking.</div>
+                </div>
+                <span class="badge-green tabular-nums">+$680/mo est.</span>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="toggle-row">
+                  <div>
+                    <div style="font-size: 12px; font-weight: 700;">Round-ups</div>
+                    <div style="font-size: 10.5px; color: var(--text-secondary);" class="tabular-nums">Round every card purchase to the nearest $5</div>
+                  </div>
+                  <button class="switch-pill on" aria-label="Toggle Round-ups"><div class="switch-knob"></div></button>
+                </div>
+
+                <div class="toggle-row">
+                  <div>
+                    <div style="font-size: 12px; font-weight: 700;">Payday boost</div>
+                    <div style="font-size: 10.5px; color: var(--text-secondary);" class="tabular-nums">Move 10% of every incoming salary automatically</div>
+                  </div>
+                  <button class="switch-pill on" aria-label="Toggle Payday boost"><div class="switch-knob"></div></button>
+                </div>
+
+                <div class="toggle-row">
+                  <div>
+                    <div style="font-size: 12px; font-weight: 700;" class="tabular-nums">Weekly $50</div>
+                    <div style="font-size: 10.5px; color: var(--text-secondary);">Every Friday morning from checking</div>
+                  </div>
+                  <button class="switch-pill" aria-label="Toggle Weekly 50"><div class="switch-knob"></div></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom 5 Goal Ring Cards -->
+          <div class="contacts-grid-5" style="margin-top: 16px;">
+            <article class="goal-card">
+              <div style="width:100%; display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-secondary);">
+                <span>💻</span>
+                <span>Jul 2026</span>
+              </div>
+              <div style="position:relative; width:86px; height:86px; margin: 12px 0;">
+                <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width:100%; height:100%;">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg-pill-muted)" stroke-width="8"/>
+                  <circle class="goal-ring-arc" cx="50" cy="50" r="40" fill="none" stroke="#E05838" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="65.3"/>
+                </svg>
+                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800;" class="tabular-nums">74%</div>
+              </div>
+              <div style="font-size:13px; font-weight:700;">New MacBook Pro</div>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;" class="tabular-nums"><strong style="color:var(--text-main)">$1,849</strong> of $2,499</div>
+              <button class="goal-add-btn">+ Add money</button>
+            </article>
+
+            <article class="goal-card">
+              <div style="width:100%; display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-secondary);">
+                <span>✈️</span>
+                <span>Aug 2026</span>
+              </div>
+              <div style="position:relative; width:86px; height:86px; margin: 12px 0;">
+                <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width:100%; height:100%;">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg-pill-muted)" stroke-width="8"/>
+                  <circle class="goal-ring-arc" cx="50" cy="50" r="40" fill="none" stroke="#5B86F0" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="90.4"/>
+                </svg>
+                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800;" class="tabular-nums">64%</div>
+              </div>
+              <div style="font-size:13px; font-weight:700;">Trip to Bali</div>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;" class="tabular-nums"><strong style="color:var(--text-main)">$3,200</strong> of $5,000</div>
+              <button class="goal-add-btn">+ Add money</button>
+            </article>
+
+            <article class="goal-card">
+              <div style="width:100%; display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-secondary);">
+                <span>🛡️</span>
+                <span>Dec 2026</span>
+              </div>
+              <div style="position:relative; width:86px; height:86px; margin: 12px 0;">
+                <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width:100%; height:100%;">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg-pill-muted)" stroke-width="8"/>
+                  <circle class="goal-ring-arc" cx="50" cy="50" r="40" fill="none" stroke="#2E9E6B" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="92.9"/>
+                </svg>
+                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800;" class="tabular-nums">63%</div>
+              </div>
+              <div style="font-size:13px; font-weight:700;">Emergency Fund</div>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;" class="tabular-nums"><strong style="color:var(--text-main)">$6,300</strong> of $10,000</div>
+              <button class="goal-add-btn">+ Add money</button>
+            </article>
+
+            <article class="goal-card">
+              <div style="width:100%; display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-secondary);">
+                <span>🚗</span>
+                <span>Mar 2027</span>
+              </div>
+              <div style="position:relative; width:86px; height:86px; margin: 12px 0;">
+                <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width:100%; height:100%;">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg-pill-muted)" stroke-width="8"/>
+                  <circle class="goal-ring-arc" cx="50" cy="50" r="40" fill="none" stroke="#9E67F0" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="185.8"/>
+                </svg>
+                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800;" class="tabular-nums">26%</div>
+              </div>
+              <div style="font-size:13px; font-weight:700;">New Car</div>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;" class="tabular-nums"><strong style="color:var(--text-main)">$3,180</strong> of $12,000</div>
+              <button class="goal-add-btn">+ Add money</button>
+            </article>
+
+            <article class="goal-card">
+              <div style="width:100%; display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-secondary);">
+                <span>🎁</span>
+                <span>May 2026</span>
+              </div>
+              <div style="position:relative; width:86px; height:86px; margin: 12px 0;">
+                <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width:100%; height:100%;">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg-pill-muted)" stroke-width="8"/>
+                  <circle class="goal-ring-arc" cx="50" cy="50" r="40" fill="none" stroke="#E5A93C" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="50.2"/>
+                </svg>
+                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800;" class="tabular-nums">80%</div>
+              </div>
+              <div style="font-size:13px; font-weight:700;">Mom's birthday gift</div>
+              <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;" class="tabular-nums"><strong style="color:var(--text-main)">$1,680</strong> of $2,100</div>
+              <button class="goal-add-btn">+ Add money</button>
+            </article>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             SCREEN 3: MANAGE CARDS (1:1 WITH VIDEO FRAME 00:01 & 00:08)
+        ==================================================================== -->
+        <section id="screen-manage" class="vertix-screen hidden">
+          <div class="manage-grid">
+            <!-- Left: Your cards -->
+            <div class="v-card">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:14.5px; font-weight:700;">Your cards</span>
+                <span class="badge-green" id="card-status-pill">● Active</span>
+              </div>
+
+              <div class="credit-card-scene">
+                <div class="credit-card-3d" id="interactive-credit-card">
+                  <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <span style="font-size:16px; font-weight:800; letter-spacing:-0.02em;">Vertix</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.75"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
+                  </div>
+
+                  <div class="card-chip"></div>
+
+                  <div style="display:flex; align-items:flex-end; justify-content:space-between;">
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:15px; letter-spacing:0.08em;" class="tabular-nums" id="card-digits-display">••••  ••••  ••••  4782</div>
+                    <div style="display:flex; gap:14px; font-size:10px; opacity:0.8;" class="tabular-nums">
+                      <div><div style="font-size:8px; opacity:0.6;">EXPIRES</div>09/28</div>
+                      <div><div style="font-size:8px; opacity:0.6;">CVV</div><span id="card-cvv-display">•••</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-bottom:12px;">Tap the card to flip it</div>
+
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                <button class="filter-pill-btn active card-selector-pill tabular-nums" data-last4="4782" style="padding:5px 12px; font-size:11.5px;">
+                  <span style="display:inline-flex; align-items:center;">
+                    <span style="width:10px; height:10px; border-radius:99px; background:#EB001B; display:inline-block;"></span>
+                    <span style="width:10px; height:10px; border-radius:99px; background:#F79E1B; margin-left:-4px; display:inline-block;"></span>
+                  </span>
+                  <span>•• 4782</span>
+                </button>
+                <button class="filter-pill-btn card-selector-pill tabular-nums" data-last4="9018" style="padding:5px 12px; font-size:11.5px;">
+                  <span style="display:inline-flex; align-items:center;">
+                    <span style="width:10px; height:10px; border-radius:99px; background:#EB001B; display:inline-block;"></span>
+                    <span style="width:10px; height:10px; border-radius:99px; background:#F79E1B; margin-left:-4px; display:inline-block;"></span>
+                  </span>
+                  <span>•• 9018</span>
+                </button>
+              </div>
+
+              <div class="card-action-grid">
+                <button class="card-act-btn" id="btn-card-freeze">
+                  <span>❄️</span>
+                  <span>Freeze</span>
+                </button>
+                <button class="card-act-btn" id="btn-card-show">
+                  <span>👁</span>
+                  <span>Show number</span>
+                </button>
+                <button class="card-act-btn" id="btn-card-copy">
+                  <span>📋</span>
+                  <span id="copy-label">Copy number</span>
+                </button>
+                <button class="card-act-btn" id="btn-card-flip">
+                  <span>↻</span>
+                  <span>Flip card</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Card controls + Monthly spending limit -->
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div class="v-card">
+                <div style="margin-bottom:12px;">
+                  <div style="font-size:14.5px; font-weight:700;">Card controls</div>
+                  <div style="font-size:11px; color:var(--text-secondary);" class="tabular-nums">Applies to •• 4782 instantly.</div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <div class="toggle-row">
+                    <div>
+                      <div style="font-size:12px; font-weight:700;">Online payments</div>
+                      <div style="font-size:10.5px; color:var(--text-secondary);">Websites, apps and subscriptions</div>
+                    </div>
+                    <button class="switch-pill on" aria-label="Toggle Online payments"><div class="switch-knob"></div></button>
+                  </div>
+
+                  <div class="toggle-row">
+                    <div>
+                      <div style="font-size:12px; font-weight:700;">Contactless</div>
+                      <div style="font-size:10.5px; color:var(--text-secondary);" class="tabular-nums">Tap to pay up to $250 per payment</div>
+                    </div>
+                    <button class="switch-pill on" aria-label="Toggle Contactless"><div class="switch-knob"></div></button>
+                  </div>
+
+                  <div class="toggle-row">
+                    <div>
+                      <div style="font-size:12px; font-weight:700;">ATM withdrawals</div>
+                      <div style="font-size:10.5px; color:var(--text-secondary);">Cash withdrawals worldwide</div>
+                    </div>
+                    <button class="switch-pill" aria-label="Toggle ATM withdrawals"><div class="switch-knob"></div></button>
+                  </div>
+
+                  <div class="toggle-row">
+                    <div>
+                      <div style="font-size:12px; font-weight:700;">Use abroad</div>
+                      <div style="font-size:10.5px; color:var(--text-secondary);">Payments outside Bangladesh</div>
+                    </div>
+                    <button class="switch-pill on" aria-label="Toggle Use abroad"><div class="switch-knob"></div></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="v-card">
+                <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px;">
+                  <div>
+                    <div style="font-size:13px; font-weight:700;">Monthly spending limit</div>
+                    <div style="font-size:10.5px; color:var(--text-secondary);">Reset on the 1st of every month</div>
+                  </div>
+                  <div style="font-size:22px; font-weight:800;" class="tabular-nums" id="limit-val-display">$5,500.00</div>
+                </div>
+
+                <input type="range" id="limit-slider" min="1000" max="15000" step="250" value="5500" style="width:100%; accent-color:var(--brand-coral); cursor:pointer;" aria-label="Monthly spending limit">
+
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-secondary); margin-top:8px;" class="tabular-nums">
+                  <span><strong>$1,450.00</strong> spent · 26%</span>
+                  <span>$15,000 max</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             SCREEN 4: OVERVIEW (1:1 WITH VIDEO FRAME 00:03 & 00:08)
+        ==================================================================== -->
+        <section id="screen-overview" class="vertix-screen hidden">
+          <div class="overview-grid">
+            <!-- Left Column: Total Balance + Wallets + Monthly Limit -->
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <div class="v-card">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-size:12px; color:var(--text-secondary);">Total Balance</span>
+                  <span style="background:var(--bg-well); padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700;">🇺🇸 USD ⌄</span>
+                </div>
+                <div style="font-size:32px; font-weight:800; letter-spacing:-0.03em; margin:10px 0 6px;" class="tabular-nums" id="ov-balance-val">$589,045.62</div>
+                <div style="font-size:11px; color:var(--text-secondary);" class="tabular-nums">
+                  <span class="badge-green">↑ +12.4%</span> vs last month
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px;">
+                  <button class="qt-send-btn" style="padding:9px;">↗ Transfer</button>
+                  <button class="qt-send-btn" style="padding:9px; background:var(--bg-well); color:var(--text-main);">↙ Request</button>
+                </div>
+              </div>
+
+              <div class="v-card">
+                <div style="display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; margin-bottom:12px;">
+                  <span>Wallets</span>
+                  <span style="color:var(--text-secondary); font-weight:500;" class="tabular-nums">Total 6 wallets</span>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+                  <div class="v-well" style="padding:10px;">
+                    <div style="font-size:11px; font-weight:700;">🇺🇸 USD</div>
+                    <div style="font-size:12.5px; font-weight:800; margin:6px 0 2px;" class="tabular-nums">$22,678.00</div>
+                    <span class="badge-green" style="font-size:9px;">Active</span>
+                  </div>
+                  <div class="v-well" style="padding:10px;">
+                    <div style="font-size:11px; font-weight:700;">🇪🇺 EUR</div>
+                    <div style="font-size:12.5px; font-weight:800; margin:6px 0 2px;" class="tabular-nums">€18,345.00</div>
+                    <span class="badge-green" style="font-size:9px;">Active</span>
+                  </div>
+                  <div class="v-well" style="padding:10px;">
+                    <div style="font-size:11px; font-weight:700;">🇬🇧 GBP</div>
+                    <div style="font-size:12.5px; font-weight:800; margin:6px 0 2px;" class="tabular-nums">£12,000.00</div>
+                    <span class="badge-green" style="font-size:9px; background:rgba(224,88,56,0.15); color:var(--brand-coral);">Inactive</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="v-card">
+                <div style="font-size:12.5px; font-weight:700; margin-bottom:12px;">Monthly Spending Limit</div>
+                <div style="height:8px; border-radius:99px; background:var(--brand-coral-soft); overflow:hidden;">
+                  <div style="width:28%; height:100%; background:var(--brand-coral); border-radius:99px;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-secondary); margin-top:8px;" class="tabular-nums">
+                  <span><strong style="color:var(--text-main)">$1,250.00</strong> spent of</span>
+                  <span>$5,500.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle Column: 2x2 KPI Cards -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+              <div class="coral-stat-card">
+                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600;">
+                  <span>Total Spending</span>
+                  <span>↗</span>
+                </div>
+                <div>
+                  <div style="font-size:28px; font-weight:800;" class="tabular-nums">$788</div>
+                  <div style="font-size:11px; opacity:0.85;">This month</div>
+                </div>
+              </div>
+
+              <div class="blush-stat-card">
+                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600;">
+                  <span>Total Saved</span>
+                  <span>↗</span>
+                </div>
+                <div>
+                  <div style="font-size:28px; font-weight:800;" class="tabular-nums">$525</div>
+                  <div style="font-size:11px; color:var(--text-secondary);">This month</div>
+                </div>
+              </div>
+
+              <div class="v-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:var(--text-secondary);">
+                  <span>Total Income</span>
+                  <span>↗</span>
+                </div>
+                <div>
+                  <div style="font-size:26px; font-weight:800;" class="tabular-nums">$678</div>
+                  <div style="font-size:10.5px; color:var(--color-green); font-weight:600;" class="tabular-nums">+8.4% This month</div>
+                </div>
+              </div>
+
+              <div class="v-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:var(--text-secondary);">
+                  <span>Total Revenue</span>
+                  <span>↗</span>
+                </div>
+                <div>
+                  <div style="font-size:26px; font-weight:800;" class="tabular-nums">$435</div>
+                  <div style="font-size:10.5px; color:var(--color-green); font-weight:600;" class="tabular-nums">+5.1% This month</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Total Income Profit & Loss Chart -->
+            <div class="v-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                <div>
+                  <div style="font-size:15px; font-weight:700;">Total Income</div>
+                  <div style="font-size:11px; color:var(--text-secondary);">View your income in a certain period of time</div>
+                </div>
+                <span style="opacity:0.5">⚙</span>
+              </div>
+
+              <div class="v-well" style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; margin-bottom:14px;">
+                  <span>Profit and Loss</span>
+                  <div style="display:flex; gap:12px;">
+                    <span><strong style="color:var(--brand-coral)">■</strong> Profit</span>
+                    <span><strong style="color:var(--brand-ink)">■</strong> Loss</span>
+                  </div>
+                </div>
+
+                <div style="height:175px; display:flex; align-items:flex-end; gap:12px; padding-top:10px;">
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:62%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:38%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:84%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:64%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:48%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:32%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:58%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:68%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:92%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:72%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:52%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:42%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:74%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:34%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                  <div style="flex:1; display:flex; align-items:flex-end; gap:3px; height:100%;">
+                    <div style="flex:1; height:88%; background:var(--brand-coral); border-radius:4px 4px 0 0;"></div>
+                    <div style="flex:1; height:54%; background:var(--brand-ink); border-radius:4px 4px 0 0;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activities Bottom Card -->
+          <div class="v-card" style="margin-top:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+              <span style="font-size:15px; font-weight:700;">Recent Activities</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div class="search-pill-box" style="background:var(--bg-well); width:180px; padding:5px 12px;">
+                  <span style="font-size:11px; color:var(--text-muted);">🔍 Search</span>
+                </div>
+                <span class="filter-pill-btn" style="background:var(--bg-well); padding:5px 12px; font-size:11px;">Filter ⚙</span>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1.4fr 0.9fr 1fr 1.3fr; gap:12px; padding:10px 14px; background:var(--bg-well); border-radius:10px; font-size:11px; font-weight:600; color:var(--text-secondary);">
+              <span>Order ID</span>
+              <span>Activity</span>
+              <span>Price</span>
+              <span>Status</span>
+              <span>Date</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1.4fr 0.9fr 1fr 1.3fr; gap:12px; padding:12px 14px; font-size:12px; align-items:center; border-bottom:1px solid var(--border-soft);" class="tabular-nums">
+              <span style="font-weight:600;">INV_000076</span>
+              <span style="font-weight:600;">Mobile App Purchase</span>
+              <span class="tabular-nums" style="font-weight:700;">$25,500</span>
+              <span><span class="badge-green">● Completed</span></span>
+              <span style="color:var(--text-secondary);">17 Apr, 2026 03:45 PM</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1.4fr 0.9fr 1fr 1.3fr; gap:12px; padding:12px 14px; font-size:12px; align-items:center;" class="tabular-nums">
+              <span style="font-weight:600;">INV_000075</span>
+              <span style="font-weight:600;">Cloud Hosting Renewal</span>
+              <span class="tabular-nums" style="font-weight:700;">$4,200</span>
+              <span><span class="badge-green">● Completed</span></span>
+              <span style="color:var(--text-secondary);">15 Apr, 2026 11:20 AM</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       INTERACTIVE VERTIX CHOREOGRAPHY ENGINE
+  ========================================================================== -->
+  <script>
+    // 1. Asymmetric Clip-Path Pill Navigation
+    function slidePill(pill, box, target, animate = true) {
+      if (!pill || !box || !target) return;
+      const W = box.scrollWidth, H = box.scrollHeight;
+      const to = {
+        l: target.offsetLeft,
+        t: target.offsetTop,
+        r: W - (target.offsetLeft + target.offsetWidth),
+        b: H - (target.offsetTop + target.offsetHeight)
+      };
+      const clip = (e) => `inset(${e.t}px ${e.r}px ${e.b}px ${e.l}px round 999px)`;
+      if (!pill._st || !animate) {
+        pill._st = { ...to };
+        gsap.set(pill, { clipPath: clip(pill._st) });
+        return;
+      }
+      const st = pill._st, fwd = to.l > st.l;
+      const [lead, trail] = fwd ? ['r', 'l'] : ['l', 'r'];
+      const draw = () => gsap.set(pill, { clipPath: clip(st) });
+      gsap.killTweensOf(st);
+      gsap.to(st, { [lead]: to[lead], duration: 0.34, ease: 'power3.out', onUpdate: draw });
+      gsap.to(st, { [trail]: to[trail], duration: 0.52, ease: 'power3.inOut', onUpdate: draw });
+    }
+
+    const screenMeta = {
+      contacts: {
+        title: 'Contacts',
+        sub: 'The people and businesses you pay the most, one tap away.',
+        cta: 'Add contact',
+        showCta: true
+      },
+      savings: {
+        title: 'Savings & Goals',
+        sub: 'Set money aside for the things that matter — and watch it grow.',
+        cta: 'New goal',
+        showCta: true
+      },
+      manage: {
+        title: 'Manage',
+        sub: 'Freeze cards, fine-tune limits and decide which wallets stay switched on.',
+        cta: 'New card',
+        showCta: true
+      },
+      overview: {
+        title: 'Good morning, Code XR',
+        sub: 'Stay on top of your tasks, monitor progress, and track status.',
+        cta: '',
+        showCta: false
+      }
+    };
+
+    const stageTitle = document.getElementById('stage-title');
+    const stageSub = document.getElementById('stage-subtitle');
+    const stageCtaBtn = document.getElementById('stage-cta-btn');
+    const stageCtaLabel = document.getElementById('stage-cta-label');
+    const topNavBox = document.getElementById('top-nav-box');
+    const topNavPill = document.getElementById('top-nav-pill');
+
+    function animateHeading(text) {
+      stageTitle.innerHTML = '';
+      [...text].forEach(ch => {
+        const s = document.createElement('span');
+        s.className = 'char-fade';
+        s.textContent = ch === ' ' ? '\u00A0' : ch;
+        stageTitle.appendChild(s);
+      });
+      gsap.fromTo(
+        stageTitle.querySelectorAll('.char-fade'),
+        { opacity: 0, y: 20, filter: 'blur(4px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.38, stagger: 0.018, ease: 'power3.out' }
+      );
+      gsap.fromTo(
+        stageSub,
+        { opacity: 0, x: -14, y: 8 },
+        { opacity: 1, x: 0, y: 0, duration: 0.42, delay: 0.08, ease: 'power3.out' }
+      );
+      if (!stageCtaBtn.classList.contains('hidden')) {
+        gsap.fromTo(
+          stageCtaBtn,
+          { opacity: 0, x: 24, scale: 0.9 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.42, delay: 0.1, ease: 'back.out(1.5)' }
+        );
+      }
+    }
+
+    function countUpCurrency(el, endVal, decimals = 2, prefix = '$', suffix = '') {
+      if (!el) return;
+      const obj = { v: 0 };
+      gsap.killTweensOf(obj);
+      gsap.to(obj, {
+        v: endVal,
+        duration: 0.78,
+        ease: 'power3.out',
+        onUpdate: () => {
+          el.textContent = prefix + obj.v.toLocaleString('en-US', {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+          }) + suffix;
+        }
+      });
+    }
+
+    // Automatic Live Counter for EVERY numeric element inside the active screen
+    function autoCountUpAllNumbers(container) {
+      const nodes = container.querySelectorAll('.tabular-nums');
+      nodes.forEach((node, idx) => {
+        if (node.children.length > 0) return; // Only leaf text nodes
+        if (!node.dataset.origText) {
+          node.dataset.origText = node.textContent;
+        }
+        const raw = node.dataset.origText;
+        // Match first primary number (with optional commas and decimals)
+        const match = raw.match(/([0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(\.[0-9]+)?/);
+        if (!match) return;
+        const fullNumStr = match[0];
+        const targetVal = parseFloat(fullNumStr.replace(/,/g, ''));
+        if (isNaN(targetVal) || targetVal === 0 || targetVal > 9000 && raw.includes('••')) return;
+        const hasCommas = fullNumStr.includes(',');
+        const decPart = match[2] ? match[2].length - 1 : 0;
+        const startIdx = match.index;
+        const before = raw.slice(0, startIdx);
+        const after = raw.slice(startIdx + fullNumStr.length);
+
+        const proxy = { val: 0 };
+        gsap.killTweensOf(proxy);
+        gsap.to(proxy, {
+          val: targetVal,
+          duration: 0.75,
+          delay: 0.08 + Math.min(idx * 0.018, 0.35),
+          ease: 'power3.out',
+          onUpdate: () => {
+            const formatted = hasCommas || decPart > 0
+              ? proxy.val.toLocaleString('en-US', { minimumFractionDigits: decPart, maximumFractionDigits: decPart })
+              : Math.round(proxy.val).toString();
+            node.textContent = before + formatted + after;
+          }
+        });
+      });
+    }
+
+    function choreographScreenElements(screenKey) {
+      const sec = document.getElementById('screen-' + screenKey);
+      if (!sec) return;
+
+      // 1. All outer cards slide & scale in with stagger
+      const cards = sec.querySelectorAll('.v-card, .coral-stat-card, .blush-stat-card, .contact-card, .goal-card');
+      gsap.fromTo(
+        cards,
+        { y: 34, scale: 0.95, opacity: 0 },
+        { y: 0, scale: 1, opacity: 1, duration: 0.5, stagger: 0.055, ease: 'power3.out', clearProps: 'transform' }
+      );
+
+      // 2. All inner wells, rows, and toolbars slide in from left/bottom
+      const wells = sec.querySelectorAll('.v-well, .toggle-row, .contacts-toolbar > *, .qt-input-box');
+      if (wells.length) {
+        gsap.fromTo(
+          wells,
+          { y: 18, x: -14, opacity: 0 },
+          { y: 0, x: 0, opacity: 1, duration: 0.44, stagger: 0.035, delay: 0.06, ease: 'power3.out' }
+        );
+      }
+
+      // 3. All inner text headings, labels, badges, and buttons slide in individually
+      const innerTexts = sec.querySelectorAll('.v-card div[style*="font-weight"], .contact-card div[style*="font-weight"], .goal-card div[style*="font-weight"], .badge-green, .contact-type-tag, .star-btn');
+      if (innerTexts.length) {
+        gsap.fromTo(
+          innerTexts,
+          { y: 12, x: -8, opacity: 0 },
+          { y: 0, x: 0, opacity: 1, duration: 0.38, stagger: 0.015, delay: 0.1, ease: 'power2.out' }
+        );
+      }
+
+      // 4. Every switch knob slides into position
+      const knobs = sec.querySelectorAll('.switch-pill.on .switch-knob');
+      if (knobs.length) {
+        gsap.fromTo(
+          knobs,
+          { x: 0 },
+          { x: 16, duration: 0.45, stagger: 0.06, delay: 0.22, ease: 'back.out(2)' }
+        );
+      }
+
+      // 5. Auto count-up every number on the screen
+      autoCountUpAllNumbers(sec);
+
+      // 6. Screen-specific deep element animations (colors, avatars, rings, bars)
+      if (screenKey === 'contacts') {
+        gsap.fromTo(
+          sec.querySelectorAll('.qt-person'),
+          { x: -22, y: 14, scale: 0.45, opacity: 0 },
+          { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.46, stagger: 0.055, delay: 0.1, ease: 'back.out(1.8)' }
+        );
+        gsap.fromTo(
+          sec.querySelectorAll('.qt-preset-btn, .qt-send-btn'),
+          { x: 20, y: 8, opacity: 0 },
+          { x: 0, y: 0, opacity: 1, duration: 0.38, stagger: 0.045, delay: 0.14, ease: 'power3.out' }
+        );
+        gsap.fromTo(
+          sec.querySelectorAll('.contact-card .qt-avatar'),
+          { scale: 0.3, y: 12, opacity: 0 },
+          { scale: 1, y: 0, opacity: 1, duration: 0.48, stagger: 0.055, delay: 0.14, ease: 'back.out(1.9)' }
+        );
+        gsap.fromTo(
+          sec.querySelectorAll('.contact-card .contact-type-tag, .contact-card .contact-foot'),
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.38, stagger: 0.03, delay: 0.2, ease: 'power2.out' }
+        );
+      } else if (screenKey === 'savings') {
+        gsap.fromTo(
+          '#sav-main-bar',
+          { scaleX: 0, transformOrigin: 'left center' },
+          { scaleX: 1, duration: 0.8, delay: 0.12, ease: 'expo.out' }
+        );
+        gsap.fromTo(
+          sec.querySelectorAll('.sav-bar'),
+          { scaleY: 0, transformOrigin: 'bottom center' },
+          { scaleY: 1, duration: 0.68, stagger: 0.055, delay: 0.12, ease: 'expo.out' }
+        );
+        const targetOffsets = [65.3, 90.4, 92.9, 185.8, 50.2];
+        sec.querySelectorAll('.goal-ring-arc').forEach((arc, i) => {
+          gsap.fromTo(
+            arc,
+            { strokeDashoffset: 251.2 },
+            { strokeDashoffset: targetOffsets[i], duration: 0.88, delay: 0.16 + i * 0.06, ease: 'power3.out' }
+          );
+        });
+        gsap.fromTo(
+          sec.querySelectorAll('.goal-add-btn'),
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.38, stagger: 0.05, delay: 0.24, ease: 'power2.out' }
+        );
+      } else if (screenKey === 'manage') {
+        gsap.fromTo(
+          '#interactive-credit-card',
+          { rotateY: -28, rotateX: 14, y: 28, scale: 0.88, opacity: 0 },
+          { rotateY: 0, rotateX: 0, y: 0, scale: 1, opacity: 1, duration: 0.68, delay: 0.06, ease: 'power3.out', clearProps: 'transform' }
+        );
+        gsap.fromTo(
+          sec.querySelectorAll('.card-selector-pill, .card-act-btn'),
+          { y: 18, scale: 0.88, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, duration: 0.4, stagger: 0.045, delay: 0.16, ease: 'back.out(1.5)' }
+        );
+      } else if (screenKey === 'overview') {
+        gsap.fromTo(
+          sec.querySelectorAll('.coral-stat-card, .blush-stat-card'),
+          { clipPath: 'inset(100% 0% 0% 0% round 20px)' },
+          { clipPath: 'inset(0% 0% 0% 0% round 20px)', duration: 0.72, stagger: 0.08, delay: 0.06, ease: 'power3.out' }
+        );
+        gsap.fromTo(
+          sec.querySelectorAll('.v-well div[style*="border-radius:4px 4px 0 0"]'),
+          { scaleY: 0, transformOrigin: 'bottom center' },
+          { scaleY: 1, duration: 0.65, stagger: 0.025, delay: 0.14, ease: 'expo.out' }
+        );
+        gsap.fromTo(
+          sec.querySelectorAll('div[style*="width:28%"]'),
+          { scaleX: 0, transformOrigin: 'left center' },
+          { scaleX: 1, duration: 0.75, delay: 0.18, ease: 'expo.out' }
+        );
+      }
+    }
+
+    function switchScreen(screenKey) {
+      const meta = screenMeta[screenKey] || screenMeta.contacts;
+      if (meta.showCta) {
+        stageCtaBtn.classList.remove('hidden');
+        stageCtaLabel.textContent = meta.cta;
+      } else {
+        stageCtaBtn.classList.add('hidden');
+      }
+      stageSub.textContent = meta.sub;
+      animateHeading(meta.title);
+
+      document.querySelectorAll('.vertix-screen').forEach(sec => sec.classList.add('hidden'));
+      const targetSec = document.getElementById('screen-' + screenKey);
+      if (targetSec) {
+        targetSec.classList.remove('hidden');
+        choreographScreenElements(screenKey);
+      }
+
+      // Sync sidebar active icon
+      document.querySelectorAll('.side-nav-trigger').forEach(b => b.classList.remove('active'));
+      const activeSide = document.querySelector(`.side-nav-trigger[data-screen="${screenKey}"]`);
+      if (activeSide) activeSide.classList.add('active');
+
+      // Sync top pill
+      const matchingTop = document.querySelector(`.top-nav-btn[data-screen="${screenKey}"]`);
+      if (matchingTop) {
+        slidePill(topNavPill, topNavBox, matchingTop, true);
+      }
+    }
+
+    document.querySelectorAll('.side-nav-trigger').forEach(btn => {
+      btn.addEventListener('click', () => switchScreen(btn.dataset.screen));
+    });
+
+    document.querySelectorAll('.top-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchScreen(btn.dataset.screen));
+    });
+
+    // 2. Quick Transfer Interactive Recipient & Amount Presets
+    const qtPersons = document.querySelectorAll('.qt-person');
+    const qtTargetAvatar = document.getElementById('qt-target-avatar');
+    const qtTargetName = document.getElementById('qt-target-name');
+    const qtAmountInput = document.getElementById('qt-amount-input');
+    const qtSendLabel = document.getElementById('qt-send-label');
+    const qtPresetBtns = document.querySelectorAll('.qt-preset-btn');
+
+    function updateSendButtonLabel() {
+      const val = parseFloat(qtAmountInput.value) || 0;
+      qtSendLabel.textContent = 'Send $' + val.toFixed(2);
+    }
+
+    qtPersons.forEach(person => {
+      person.addEventListener('click', () => {
+        qtPersons.forEach(p => p.classList.remove('selected'));
+        person.classList.add('selected');
+        qtTargetName.textContent = person.dataset.name;
+        qtTargetAvatar.textContent = person.dataset.initials;
+        qtTargetAvatar.style.background = person.dataset.color;
+      });
+    });
+
+    qtPresetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        qtPresetBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        qtAmountInput.value = btn.dataset.amt;
+        updateSendButtonLabel();
+      });
+    });
+
+    qtAmountInput.addEventListener('input', updateSendButtonLabel);
+
+    // 3. Contacts Filter & Live Search
+    const filterButtons = document.querySelectorAll('.filter-pill-btn');
+    const contactCards = document.querySelectorAll('#contacts-cards-grid .contact-card');
+    const contactSearch = document.getElementById('contact-search-input');
+    let currentContactFilter = 'all';
+
+    function filterContacts() {
+      const q = (contactSearch.value || '').toLowerCase();
+      contactCards.forEach(card => {
+        const matchesCat =
+          currentContactFilter === 'all' ||
+          (currentContactFilter === 'fav' && card.dataset.fav === 'true') ||
+          (currentContactFilter === 'business' && card.dataset.cat === 'business');
+        const matchesQuery = card.dataset.name.toLowerCase().includes(q);
+        card.style.display = matchesCat && matchesQuery ? 'flex' : 'none';
+      });
+    }
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentContactFilter = btn.dataset.cfilter;
+        filterContacts();
+      });
+    });
+
+    contactSearch.addEventListener('input', filterContacts);
+
+    // 4. Interactive 3D Credit Card & Switches in Manage/Savings
+    const creditCard = document.getElementById('interactive-credit-card');
+    const btnFlip = document.getElementById('btn-card-flip');
+    const btnFreeze = document.getElementById('btn-card-freeze');
+    const btnShow = document.getElementById('btn-card-show');
+    const btnCopy = document.getElementById('btn-card-copy');
+    const cardDigits = document.getElementById('card-digits-display');
+    const cardCvv = document.getElementById('card-cvv-display');
+    const cardStatus = document.getElementById('card-status-pill');
+    const limitSlider = document.getElementById('limit-slider');
+    const limitDisplay = document.getElementById('limit-val-display');
+
+    let isShown = false;
+    let isFrozen = false;
+    let activeLast4 = '4782';
+
+    document.querySelectorAll('.card-selector-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.card-selector-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeLast4 = pill.dataset.last4;
+        cardDigits.textContent = isShown
+          ? '4532  8910  2241  ' + activeLast4
+          : '••••  ••••  ••••  ' + activeLast4;
+      });
+    });
+
+    function toggleCardFlip() {
+      creditCard.classList.toggle('flipped');
+    }
+
+    creditCard.addEventListener('click', toggleCardFlip);
+    btnFlip.addEventListener('click', toggleCardFlip);
+
+    btnFreeze.addEventListener('click', () => {
+      isFrozen = !isFrozen;
+      creditCard.classList.toggle('frozen', isFrozen);
+      btnFreeze.classList.toggle('active', isFrozen);
+      cardStatus.textContent = isFrozen ? '❄️ Frozen' : '● Active';
+    });
+
+    btnShow.addEventListener('click', () => {
+      isShown = !isShown;
+      btnShow.classList.toggle('active', isShown);
+      cardDigits.textContent = isShown ? '4532  8910  2241  4782' : '••••  ••••  ••••  4782';
+      cardCvv.textContent = isShown ? '842' : '•••';
+    });
+
+    btnCopy.addEventListener('click', () => {
+      const lbl = document.getElementById('copy-label');
+      lbl.textContent = 'Copied!';
+      setTimeout(() => { lbl.textContent = 'Copy number'; }, 1400);
+    });
+
+    limitSlider.addEventListener('input', () => {
+      const v = parseInt(limitSlider.value, 10);
+      limitDisplay.textContent = '$' + v.toLocaleString('en-US') + '.00';
+    });
+
+    document.querySelectorAll('.switch-pill').forEach(sw => {
+      sw.addEventListener('click', () => sw.classList.toggle('on'));
+    });
+
+    // 5. Light / Dark Mode Switcher
+    const sunBtn = document.getElementById('theme-sun-btn');
+    const moonBtn = document.getElementById('theme-moon-btn');
+
+    sunBtn.addEventListener('click', () => {
+      document.documentElement.classList.remove('dark');
+      sunBtn.classList.add('active');
+      moonBtn.classList.remove('active');
+    });
+
+    moonBtn.addEventListener('click', () => {
+      document.documentElement.classList.add('dark');
+      moonBtn.classList.add('active');
+      sunBtn.classList.remove('active');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const initTop = document.querySelector('.top-nav-btn[data-screen="contacts"]');
+      slidePill(topNavPill, topNavBox, initTop, false);
+
+      // Initial shell entrance choreography (seen at 00:02 in video)
+      gsap.fromTo('.brand-pill', { x: -28, scale: 0.85, opacity: 0 }, { x: 0, scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.6)' });
+      gsap.fromTo('.center-nav-pill', { y: -20, scaleX: 0.75, opacity: 0 }, { y: 0, scaleX: 1, opacity: 1, duration: 0.48, delay: 0.05, ease: 'power3.out' });
+      gsap.fromTo('.topbar-right > *', { x: 24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.42, stagger: 0.06, delay: 0.08, ease: 'power3.out' });
+      gsap.fromTo('.left-sidebar-stack .side-pill-group', { x: -24, scaleY: 0.75, opacity: 0 }, { x: 0, scaleY: 1, opacity: 1, duration: 0.46, stagger: 0.07, delay: 0.06, ease: 'power3.out' });
+      gsap.fromTo('.left-sidebar-stack .side-icon-btn', { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.36, stagger: 0.03, delay: 0.14, ease: 'back.out(1.8)' });
+
+      animateHeading('Contacts');
+      choreographScreenElements('contacts');
+    });
+  </script>
+</body>
+</html>

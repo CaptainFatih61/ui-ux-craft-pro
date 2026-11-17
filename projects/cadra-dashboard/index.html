@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadra — Outback Cycles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    :root {
+      --bg-page: #F6F5F1;
+      --bg-stone: #ECEAE3;
+      --bg-stone-hover: #E4E1D8;
+      --bg-card-inner: #FAF9F6;
+      --bg-slot-empty: #D9D6CE;
+      --bg-blue-card: #D5E5F2;
+      --bg-dark-card: #141413;
+      --text-primary: #141413;
+      --text-secondary: #6E6C66;
+      --text-muted: #928F88;
+      --border-line: #E4E2DA;
+      --border-subtle: rgba(20, 20, 19, 0.06);
+      --top-pill-bg: #141413;
+      --top-pill-ink: #FFFFFF;
+      --sub-pill-bg: #FFFFFF;
+      --sub-pill-ink: #141413;
+      --color-blue: #3D70B2;
+      --color-coral: #C85A32;
+      --color-olive: #6B7B3E;
+      --color-lime: #A3E635;
+    }
+
+    html.dark {
+      --bg-page: #111110;
+      --bg-stone: #1A1A19;
+      --bg-stone-hover: #222220;
+      --bg-card-inner: #222220;
+      --bg-slot-empty: #2C2C29;
+      --bg-blue-card: #18293A;
+      --bg-dark-card: #1E1E1C;
+      --text-primary: #F3F2EE;
+      --text-secondary: #9A9891;
+      --text-muted: #6E6C66;
+      --border-line: #262624;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --top-pill-bg: #F3F2EE;
+      --top-pill-ink: #141413;
+      --sub-pill-bg: #2C2C29;
+      --sub-pill-ink: #F3F2EE;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--color-blue);
+      outline-offset: 2px;
+    }
+
+    /* =========================================================================
+       LEFT FLOATING VERTICAL DOCK (EXACT CADRA PILL)
+    ========================================================================== */
+    .left-dock {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 50;
+      width: 40px;
+      background: #161615;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      padding: 8px 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    .dock-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8E8D87;
+      position: relative;
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .dock-btn:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .dock-badge {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--color-coral);
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #161615;
+    }
+
+    .dock-divider {
+      width: 18px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.12);
+      margin: 2px 0;
+    }
+
+    .theme-switch-track {
+      background: #242422;
+      border-radius: 999px;
+      padding: 3px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .theme-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #787771;
+      transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .theme-btn.active {
+      background: #383835;
+      color: #FFFFFF;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    /* =========================================================================
+       APP SHELL CONTAINER
+    ========================================================================== */
+    .app-shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 36px 56px 82px;
+    }
+
+    @media (max-width: 768px) {
+      .left-dock { display: none; }
+      .app-shell { padding: 0 18px 40px 18px; }
+    }
+
+    /* =========================================================================
+       TOP MODULE NAVBAR WITH EXACT slidePill() LAYER
+    ========================================================================== */
+    .topbar {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--text-primary);
+      color: var(--bg-page);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .brand-name {
+      font-size: 14.5px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      line-height: 1.15;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.15;
+    }
+
+    .nav-pill-box {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      border-radius: 999px;
+      user-select: none;
+    }
+
+    .nav-tab {
+      position: relative;
+      z-index: 10;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-badge-muted {
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(128, 128, 120, 0.14);
+      color: var(--text-secondary);
+    }
+
+    .nav-badge-alert {
+      width: 17px;
+      height: 17px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--color-coral);
+      color: #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-pill-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      background: var(--top-pill-bg);
+      color: var(--top-pill-ink);
+      clip-path: inset(3px 400px 3px 400px round 999px);
+    }
+
+    .nav-pill-overlay .nav-tab {
+      color: var(--top-pill-ink);
+    }
+
+    .nav-pill-overlay .nav-badge-muted {
+      background: rgba(255, 255, 255, 0.18);
+      color: var(--top-pill-ink);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      color: var(--text-primary);
+      background: var(--border-subtle);
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #294636;
+      color: #D8EAE0;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* =========================================================================
+       SHARED PAGE HEADER ROW (TITLE + MODULE LINKS + TELEMETRY STRIP)
+    ========================================================================== */
+    .page-header-row {
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .title-stack {
+      min-width: 220px;
+    }
+
+    .title-eyebrow {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+      height: 16px;
+    }
+
+    .page-title {
+      font-size: 42px;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .char-slot {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+
+    .header-middle-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding-bottom: 6px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .header-link-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .header-link-item:hover,
+    .header-link-item.active {
+      color: var(--text-primary);
+    }
+
+    .header-telemetry {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .telemetry-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sq-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .telemetry-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border-line);
+    }
+
+    .mini-tri-bar {
+      width: 42px;
+      height: 6px;
+      border-radius: 99px;
+      overflow: hidden;
+      display: flex;
+      gap: 1.5px;
+    }
+
+    /* =========================================================================
+       SUB-NAVIGATION ROW (WITH WHITE SLIDING PILL ON STONE TRACK)
+    ========================================================================== */
+    .subnav-row {
+      margin-top: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .subnav-track {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      border-radius: 999px;
+      background: var(--bg-stone);
+      user-select: none;
+    }
+
+    .subnav-tab {
+      position: relative;
+      z-index: 10;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .subnav-pill-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      background: var(--sub-pill-bg);
+      color: var(--sub-pill-ink);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      clip-path: inset(3px 200px 3px 200px round 999px);
+    }
+
+    .subnav-pill-overlay .subnav-tab {
+      color: var(--sub-pill-ink);
+    }
+
+    .action-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-pill-stone {
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: var(--bg-stone);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-pill-stone:hover {
+      background: var(--bg-stone-hover);
+    }
+
+    .btn-pill-solid {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--text-primary);
+      color: var(--bg-page);
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-pill-solid:hover {
+      opacity: 0.88;
+    }
+
+    /* =========================================================================
+       WAREHOUSES VIEW (EXACT 3-COLUMN STONE CARDS & SLOT MATRICES)
+    ========================================================================== */
+    .filter-strip {
+      margin: 14px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .filter-link {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.15s ease;
+    }
+
+    .filter-link:hover {
+      color: var(--text-primary);
+    }
+
+    .filter-link.active {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .warehouses-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1080px) {
+      .warehouses-grid { grid-template-columns: 1fr; }
+    }
+
+    .wh-card {
+      background: var(--bg-stone);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease;
+    }
+
+    .wh-header-box {
+      background: var(--bg-card-inner);
+      border-radius: 11px;
+      padding: 11px 14px;
+      text-align: center;
+      margin-bottom: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .wh-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .wh-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Card 1 (Southwest Works): Side-by-side 2-column body */
+    .wh-body-split {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+      flex: 1;
+      padding: 2px 4px 4px;
+    }
+
+    /* Card 2 & 3: Top-left compact grid + bottom Most Value Here */
+    .wh-body-stacked {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      padding: 2px 4px 4px;
+    }
+
+    .wh-top-half {
+      width: 53%;
+    }
+
+    .wh-cap-line {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .wh-cap-pct {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .wh-cap-slots {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .slot-grid-10 {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 3px;
+    }
+
+    .slot-cell {
+      aspect-ratio: 1 / 1;
+      border-radius: 2.5px;
+      transition: transform 0.15s ease, opacity 0.25s ease;
+    }
+
+    .slot-cell:hover {
+      transform: scale(1.28);
+      z-index: 2;
+    }
+
+    .wh-stock-foot {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+    }
+
+    .wh-value-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wh-value-section-bottom {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .wh-value-heading {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .wh-sku-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .wh-sku-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-left: 8px;
+      border-left: 2.5px solid var(--color-blue);
+    }
+
+    .wh-sku-name {
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    .wh-sku-units {
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      line-height: 1.2;
+    }
+
+    .wh-sku-price {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    /* =========================================================================
+       KPI CARDS & REPORTING / STOCK / DASHBOARD GRIDS
+    ========================================================================== */
+    .kpi-grid-4 {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .kpi-card {
+      background: var(--bg-stone);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 124px;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .kpi-card.dark-card {
+      background: var(--bg-dark-card);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .kpi-card.blue-card {
+      background: var(--bg-blue-card);
+    }
+
+    .kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .kpi-top-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kpi-val {
+      font-size: 29px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      margin: 12px 0 8px;
+    }
+
+    .kpi-foot {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .kpi-card.dark-card .kpi-foot {
+      color: #9A9891;
+    }
+
+    /* Reporting bottom 2-col layout */
+    .reporting-bottom-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 2.05fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .reporting-bottom-grid { grid-template-columns: 1fr; }
+    }
+
+    .stone-panel {
+      background: var(--bg-stone);
+      border-radius: 16px;
+      padding: 16px 18px;
+      transition: background-color 0.3s ease;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    .chart-inner-box {
+      background: var(--bg-card-inner);
+      border-radius: 12px;
+      padding: 16px 16px 10px;
+      position: relative;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      top: 18px;
+      left: 54%;
+      transform: translateX(-50%);
+      background: var(--bg-card-inner);
+      border: 1px solid var(--border-line);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 11px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      pointer-events: none;
+      min-width: 148px;
+      z-index: 10;
+    }
+
+    .gauge-dark-well {
+      background: #141413;
+      border-radius: 14px;
+      padding: 24px 16px 20px;
+      color: #FFFFFF;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      margin: 4px 0 10px;
+    }
+
+    /* Dashboard specific grids */
+    .dash-top-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1.38fr 1fr;
+      gap: 14px;
+    }
+
+    .dash-bottom-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .dash-top-grid, .dash-bottom-grid { grid-template-columns: 1fr; }
+    }
+
+    .sched-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .sched-card {
+      background: var(--bg-card-inner);
+      border-radius: 10px;
+      padding: 10px 12px;
+      border-left: 3px solid var(--color-coral);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       LEFT FLOATING VERTICAL DOCK (EXACT CADRA SIDEBAR)
+  ========================================================================== -->
+  <aside class="left-dock" aria-label="Workspace Tools">
+    <button class="dock-btn" aria-label="Search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+    </button>
+    <button class="dock-btn" aria-label="Notifications">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="dock-badge tabular-nums">2</span>
+    </button>
+    <button class="dock-btn" aria-label="Bookmarks">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="dock-btn" aria-label="Documents">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8" stroke-linecap="round"/></svg>
+    </button>
+    <button class="dock-btn" aria-label="Activity History">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>
+    </button>
+
+    <div class="dock-divider"></div>
+
+    <div class="theme-switch-track" role="group" aria-label="Surface Theme">
+      <button id="btn-theme-light" class="theme-btn active" aria-label="Light theme">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round"/></svg>
+      </button>
+      <button id="btn-theme-dark" class="theme-btn" aria-label="Dark theme">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       MAIN APP SHELL
+  ========================================================================== -->
+  <div class="app-shell">
+
+    <!-- TOP MODULE NAVBAR -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <path d="M17.5 7.5a6.5 6.5 0 100 9" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">
+            <span>Cadra</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="opacity:0.45"><path d="M7 10l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="brand-sub">Outback Cycles</div>
+        </div>
+      </div>
+
+      <!-- Center Module Navigation with exact slidePill() clip-path overlay -->
+      <nav class="nav-pill-box" id="top-nav-box" aria-label="Primary ERP Modules">
+        <button class="nav-tab top-mod-btn" data-module="dashboard">Dashboard</button>
+        <button class="nav-tab top-mod-btn" data-module="sales">
+          <span>Sales</span>
+          <span class="nav-badge-muted tabular-nums">8</span>
+        </button>
+        <button class="nav-tab top-mod-btn" data-module="manufacturing">Manufacturing</button>
+        <button class="nav-tab top-mod-btn" data-module="stock">
+          <span>Stock</span>
+          <span class="nav-badge-alert tabular-nums">1</span>
+        </button>
+        <button class="nav-tab top-mod-btn" data-module="accounting">
+          <span>Accounting</span>
+          <span class="nav-badge-muted tabular-nums">3</span>
+        </button>
+        <button class="nav-tab top-mod-btn" data-module="reporting">Reporting</button>
+
+        <!-- Clipped duplicate layer -->
+        <div class="nav-pill-overlay" id="top-nav-pill" aria-hidden="true">
+          <div class="nav-tab">Dashboard</div>
+          <div class="nav-tab">
+            <span>Sales</span>
+            <span class="nav-badge-muted tabular-nums">8</span>
+          </div>
+          <div class="nav-tab">Manufacturing</div>
+          <div class="nav-tab">
+            <span>Stock</span>
+            <span class="nav-badge-alert tabular-nums">1</span>
+          </div>
+          <div class="nav-tab">
+            <span>Accounting</span>
+            <span class="nav-badge-muted tabular-nums">3</span>
+          </div>
+          <div class="nav-tab">Reporting</div>
+        </div>
+      </nav>
+
+      <div class="topbar-right">
+        <button class="icon-btn" aria-label="Global Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="user-avatar" title="Noor — Operations Lead">N</div>
+      </div>
+    </header>
+
+    <!-- SHARED PAGE HEADER ROW (Title + Inventory/Purchasing/Logistics + Telemetry Strip) -->
+    <div class="page-header-row">
+      <div class="title-stack">
+        <div class="title-eyebrow" id="page-eyebrow"></div>
+        <h1 class="page-title" id="page-title" aria-live="polite">Warehouses</h1>
+      </div>
+
+      <div class="header-middle-links" id="header-context-links">
+        <span class="header-link-item active">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <span>Inventory</span>
+          <span class="nav-badge-alert tabular-nums">1</span>
+        </span>
+        <span class="header-link-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span>Purchasing</span>
+        </span>
+        <span class="header-link-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span>Logistics</span>
+        </span>
+      </div>
+
+      <div class="header-telemetry">
+        <div class="telemetry-item">
+          <span class="sq-dot" style="background: var(--color-coral);"></span>
+          <strong class="tabular-nums">$129k</strong>
+          <span style="color: var(--text-secondary);">in stock</span>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item">
+          <span class="sq-dot" style="background: var(--color-blue);"></span>
+          <strong class="tabular-nums">5 on the floor</strong>
+          <span style="color: var(--text-secondary);">across 3 locations</span>
+        </div>
+        <div class="mini-tri-bar" aria-hidden="true">
+          <span style="width: 54%; background: var(--color-blue);"></span>
+          <span style="width: 28%; background: var(--color-coral);"></span>
+          <span style="width: 18%; background: var(--color-olive);"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         STOCK MODULE SUBNAV BAR (Stock | Warehouses | Movements)
+    ======================================================================== -->
+    <div class="subnav-row" id="stock-subnav-row">
+      <div class="subnav-track" id="stock-subnav-box" role="tablist" aria-label="Stock Views">
+        <button class="subnav-tab stock-sub-btn" data-subview="stock-overview" role="tab" aria-selected="false">Stock</button>
+        <button class="subnav-tab stock-sub-btn" data-subview="warehouses" role="tab" aria-selected="true">Warehouses</button>
+        <button class="subnav-tab stock-sub-btn" data-subview="movements" role="tab" aria-selected="false">Movements</button>
+
+        <div class="subnav-pill-overlay" id="stock-subnav-pill" aria-hidden="true">
+          <div class="subnav-tab">Stock</div>
+          <div class="subnav-tab">Warehouses</div>
+          <div class="subnav-tab">Movements</div>
+        </div>
+      </div>
+
+      <div class="action-btns">
+        <button class="btn-pill-stone hidden" id="btn-stock-export">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Export</span>
+        </button>
+        <button class="btn-pill-solid">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Transfer stock</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         REPORTING MODULE SUBNAV BAR (Overview | Report builder)
+    ======================================================================== -->
+    <div class="subnav-row hidden" id="reporting-subnav-row">
+      <div class="subnav-track" id="reporting-subnav-box">
+        <button class="subnav-tab rep-sub-btn" data-repview="overview">Overview</button>
+        <button class="subnav-tab rep-sub-btn" data-repview="builder">Report builder</button>
+
+        <div class="subnav-pill-overlay" id="reporting-subnav-pill" aria-hidden="true">
+          <div class="subnav-tab">Overview</div>
+          <div class="subnav-tab">Report builder</div>
+        </div>
+      </div>
+
+      <div class="action-btns">
+        <button class="btn-pill-stone">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+          <span>Export summary</span>
+        </button>
+        <button class="btn-pill-solid">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18" stroke-linecap="round"/></svg>
+          <span>Build a report</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         DASHBOARD DIVIDER LINE
+    ======================================================================== -->
+    <div class="hidden" id="dashboard-divider" style="margin-top: 18px; border-bottom: 1px solid var(--border-line);"></div>
+
+    <!-- =======================================================================
+         VIEW 1: STOCK -> WAREHOUSES (1:1 WITH FRAME 00:00 & 00:07)
+    ======================================================================== -->
+    <main id="view-warehouses" class="cadra-view">
+      <div class="filter-strip">
+        <button class="filter-link active" data-filter="all">All stock</button>
+        <button class="filter-link" data-filter="finished">Finished goods</button>
+        <button class="filter-link" data-filter="parts">Parts &amp; materials</button>
+      </div>
+
+      <div class="warehouses-grid">
+        <!-- CARD 1: Southwest Works (10x10 Blue Grid on Left, Most Value Here on Right) -->
+        <article class="wh-card">
+          <div class="wh-header-box">
+            <div class="wh-title">Southwest Works</div>
+            <div class="wh-sub">Portland, OR · Primary warehouse</div>
+          </div>
+
+          <div class="wh-body-split">
+            <div>
+              <div class="wh-cap-line">
+                <span class="wh-cap-pct tabular-nums">74%</span>
+                <span class="wh-cap-slots tabular-nums">full · 74 of 100 slots</span>
+              </div>
+              <div class="slot-grid-10" id="grid-sw"></div>
+              <div class="wh-stock-foot">
+                <span><strong class="tabular-nums">$82,664</strong> <span style="color:var(--text-secondary)">in stock</span></span>
+                <span><strong class="tabular-nums">350</strong> <span style="color:var(--text-secondary)">units</span></span>
+              </div>
+            </div>
+
+            <div class="wh-value-section">
+              <div class="wh-value-heading">MOST VALUE HERE</div>
+              <div class="wh-sku-list">
+                <div class="wh-sku-item" style="border-left-color: var(--color-blue);">
+                  <div>
+                    <div class="wh-sku-name">48CrMo Frame Tubing</div>
+                    <div class="wh-sku-units tabular-nums">142 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$19,880</div>
+                </div>
+                <div class="wh-sku-item" style="border-left-color: var(--color-blue);">
+                  <div>
+                    <div class="wh-sku-name">6061 Alloy Wheelset</div>
+                    <div class="wh-sku-units tabular-nums">28 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$15,120</div>
+                </div>
+                <div class="wh-sku-item" style="border-left-color: var(--color-blue);">
+                  <div>
+                    <div class="wh-sku-name">Shimano GRX Groupset</div>
+                    <div class="wh-sku-units tabular-nums">18 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$14,040</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 2: Division St Showroom (10x5 Coral Grid Top-Left, Most Value Here Bottom) -->
+        <article class="wh-card">
+          <div class="wh-header-box">
+            <div class="wh-title">Division St Showroom</div>
+            <div class="wh-sub">Portland, OR · Showroom &amp; staging</div>
+          </div>
+
+          <div class="wh-body-stacked">
+            <div class="wh-top-half">
+              <div class="wh-cap-line">
+                <span class="wh-cap-pct tabular-nums">68%</span>
+                <span class="wh-cap-slots tabular-nums">full · 34 of 50 slots</span>
+              </div>
+              <div class="slot-grid-10" id="grid-div"></div>
+              <div class="wh-stock-foot">
+                <span><strong class="tabular-nums">$27,722</strong> <span style="color:var(--text-secondary)">in stock</span></span>
+                <span><strong class="tabular-nums">140</strong> <span style="color:var(--text-secondary)">units</span></span>
+              </div>
+            </div>
+
+            <div class="wh-value-section wh-value-section-bottom">
+              <div class="wh-value-heading">MOST VALUE HERE</div>
+              <div class="wh-sku-list">
+                <div class="wh-sku-item" style="border-left-color: var(--color-coral);">
+                  <div>
+                    <div class="wh-sku-name">Ridgeline Gravel</div>
+                    <div class="wh-sku-units tabular-nums">8 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$2,940</div>
+                </div>
+                <div class="wh-sku-item" style="border-left-color: var(--color-coral);">
+                  <div>
+                    <div class="wh-sku-name">Tempe Gravel</div>
+                    <div class="wh-sku-units tabular-nums">4 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$1,420</div>
+                </div>
+                <div class="wh-sku-item" style="border-left-color: var(--color-coral);">
+                  <div>
+                    <div class="wh-sku-name">Commuter Seven</div>
+                    <div class="wh-sku-units tabular-nums">5 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$1,250</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 3: East Coast Depot (10x6 Olive Grid Top-Left, Most Value Here Bottom) -->
+        <article class="wh-card">
+          <div class="wh-header-box">
+            <div class="wh-title">East Coast Depot</div>
+            <div class="wh-sub">Philadelphia, PA · Fulfillment depot</div>
+          </div>
+
+          <div class="wh-body-stacked">
+            <div class="wh-top-half">
+              <div class="wh-cap-line">
+                <span class="wh-cap-pct tabular-nums">48%</span>
+                <span class="wh-cap-slots tabular-nums">full · 29 of 60 slots</span>
+              </div>
+              <div class="slot-grid-10" id="grid-east"></div>
+              <div class="wh-stock-foot">
+                <span><strong class="tabular-nums">$18,560</strong> <span style="color:var(--text-secondary)">in stock</span></span>
+                <span><strong class="tabular-nums">270</strong> <span style="color:var(--text-secondary)">units</span></span>
+              </div>
+            </div>
+
+            <div class="wh-value-section wh-value-section-bottom">
+              <div class="wh-value-heading">MOST VALUE HERE</div>
+              <div class="wh-sku-list">
+                <div class="wh-sku-item" style="border-left-color: var(--color-olive);">
+                  <div>
+                    <div class="wh-sku-name">Ridgeline Gravel</div>
+                    <div class="wh-sku-units tabular-nums">18 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$7,120</div>
+                </div>
+                <div class="wh-sku-item" style="border-left-color: var(--color-olive);">
+                  <div>
+                    <div class="wh-sku-name">Commuter Seven</div>
+                    <div class="wh-sku-units tabular-nums">12 units</div>
+                  </div>
+                  <div class="wh-sku-price tabular-nums">$4,650</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <!-- =======================================================================
+         VIEW 2: STOCK -> STOCK OVERVIEW (1:1 WITH FRAME 00:05)
+    ======================================================================== -->
+    <section id="view-stock-overview" class="cadra-view hidden">
+      <div class="kpi-grid-4">
+        <div class="kpi-card dark-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">$ Total value of stock</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums">$128,946</div>
+          <div class="kpi-foot">Across 3 warehouses</div>
+        </div>
+
+        <div class="kpi-card blue-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">📦 Items in stock</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums">760</div>
+          <div class="kpi-foot tabular-nums">140 bikes · 620 parts &amp; frames</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">⚠️ At or below reorder</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums">4</div>
+          <div class="kpi-foot">
+            <span style="background: rgba(200,90,50,0.16); color: var(--color-coral); padding: 2px 8px; border-radius: 99px; font-weight: 600;" class="tabular-nums">2 not on order</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">🚚 On order</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums">186</div>
+          <div class="kpi-foot">Next delivery Nov 14</div>
+        </div>
+      </div>
+
+      <div class="reporting-bottom-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="stone-panel">
+          <div class="panel-header">
+            <span>Where the money sits</span>
+            <span style="color: var(--text-secondary);" class="tabular-nums">$128,946 total</span>
+          </div>
+          <div style="height: 12px; border-radius: 6px; overflow: hidden; display: flex; gap: 3px; margin: 14px 0 18px;">
+            <div style="width: 44%; background: var(--color-blue);"></div>
+            <div style="width: 35%; background: var(--color-coral);"></div>
+            <div style="width: 21%; background: var(--color-olive);"></div>
+          </div>
+          <div class="wh-sku-list">
+            <div class="wh-sku-item" style="border-left-color: var(--color-blue);">
+              <span class="wh-sku-name">Bikes</span>
+              <span class="wh-sku-price tabular-nums">$56,736 · 44%</span>
+            </div>
+            <div class="wh-sku-item" style="border-left-color: var(--color-coral);">
+              <span class="wh-sku-name">Parts &amp; groupsets</span>
+              <span class="wh-sku-price tabular-nums">$45,131 · 35%</span>
+            </div>
+            <div class="wh-sku-item" style="border-left-color: var(--color-olive);">
+              <span class="wh-sku-name">Frames &amp; raw tubing</span>
+              <span class="wh-sku-price tabular-nums">$27,079 · 21%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stone-panel">
+          <div class="panel-header">
+            <span>Below reorder point</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="wh-sku-list" style="margin-top: 8px;">
+            <div class="wh-sku-item" style="border-left-color: var(--color-coral);">
+              <div>
+                <div class="wh-sku-name">Carbon Fork · Gen 3</div>
+                <div class="wh-sku-units tabular-nums">6 left · Min 15 · Southwest Works</div>
+              </div>
+              <span class="wh-sku-price tabular-nums">$2,640</span>
+            </div>
+            <div class="wh-sku-item" style="border-left-color: var(--color-coral);">
+              <div>
+                <div class="wh-sku-name">Shimano GRX 810 Derailleur</div>
+                <div class="wh-sku-units tabular-nums">8 left · Min 20 · Southwest Works</div>
+              </div>
+              <span class="wh-sku-price tabular-nums">$1,840</span>
+            </div>
+            <div class="wh-sku-item" style="border-left-color: var(--color-olive);">
+              <div>
+                <div class="wh-sku-name"> Brooks Cambium C17 Saddle</div>
+                <div class="wh-sku-units tabular-nums">9 left · Min 12 · On order (24)</div>
+              </div>
+              <span class="wh-sku-price tabular-nums">$1,170</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 3: REPORTING -> OVERVIEW (1:1 WITH FRAME 00:02, 00:03, 00:08, 00:09)
+    ======================================================================== -->
+    <section id="view-reporting" class="cadra-view hidden">
+      <div class="kpi-grid-4">
+        <div class="kpi-card dark-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">$ Revenue</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums" id="rep-kpi-rev">$1,721,974</div>
+          <div class="kpi-foot tabular-nums"><span style="color: var(--color-lime);">+14.2%</span> vs last year</div>
+        </div>
+
+        <div class="kpi-card blue-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">🚲 Bikes shipped</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums" id="rep-kpi-bikes">916</div>
+          <div class="kpi-foot tabular-nums">76.3 per month avg</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">% Gross margin</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums">51.8%</div>
+          <div class="kpi-foot tabular-nums">Target: 50.0%</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-top-label">🕒 On-time in November</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div class="kpi-val tabular-nums">91%</div>
+          <div class="kpi-foot tabular-nums">Target: 92% · 12-month average: 93.2%</div>
+        </div>
+      </div>
+
+      <div class="reporting-bottom-grid">
+        <!-- Left 2fr: Interactive Revenue vs Cost of Goods Area Chart -->
+        <div class="stone-panel">
+          <div class="panel-header">
+            <span style="display:inline-flex; align-items:center; gap:6px;">
+              <span style="width:18px; height:18px; border-radius:99px; background:var(--border-subtle); display:inline-flex; align-items:center; justify-content:center; font-size:11px;">$</span>
+              <span>Revenue</span>
+            </span>
+            <div style="display:flex; align-items:center; gap:14px; font-size:11px; color:var(--text-secondary);">
+              <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:7px; height:7px; border-radius:99px; background:var(--color-blue);"></span>Revenue</span>
+              <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:7px; height:7px; border-radius:99px; background:#9A9891;"></span>Cost of goods</span>
+              <span style="opacity:0.5">↗</span>
+            </div>
+          </div>
+
+          <div class="chart-inner-box" id="rep-chart-stage">
+            <div class="chart-tooltip" id="rep-tooltip">
+              <div style="font-weight:600; margin-bottom:4px;" id="tip-month">Jul</div>
+              <div style="display:flex; justify-content:space-between; gap:12px;">
+                <span style="color:var(--text-secondary);">● Revenue</span>
+                <strong class="tabular-nums" id="tip-rev">$219k</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; gap:12px; margin-top:2px;">
+                <span style="color:var(--text-secondary);">● Cost of goods</span>
+                <strong class="tabular-nums" id="tip-cost">$94k</strong>
+              </div>
+            </div>
+
+            <svg viewBox="0 0 680 210" style="width:100%; height:205px; display:block; overflow:visible;">
+              <defs>
+                <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#3D70B2" stop-opacity="0.28"/>
+                  <stop offset="100%" stop-color="#3D70B2" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <!-- Horizontal guide lines -->
+              <line x1="40" y1="35" x2="660" y2="35" stroke="currentColor" stroke-opacity="0.06"/>
+              <line x1="40" y1="90" x2="660" y2="90" stroke="currentColor" stroke-opacity="0.06"/>
+              <line x1="40" y1="145" x2="660" y2="145" stroke="currentColor" stroke-opacity="0.06"/>
+
+              <text x="4" y="39" class="tabular-nums" fill="currentColor" opacity="0.4" font-size="10" font-family="JetBrains Mono">$240k</text>
+              <text x="4" y="94" class="tabular-nums" fill="currentColor" opacity="0.4" font-size="10" font-family="JetBrains Mono">$160k</text>
+              <text x="4" y="149" class="tabular-nums" fill="currentColor" opacity="0.4" font-size="10" font-family="JetBrains Mono">$80k</text>
+
+              <!-- Revenue Area & Curve -->
+              <path d="M 45 155 C 110 148, 165 118, 225 98 C 285 78, 345 48, 405 44 C 465 40, 520 65, 580 95 C 615 112, 640 128, 655 136 L 655 180 L 45 180 Z" fill="url(#revGrad)"/>
+              <path d="M 45 155 C 110 148, 165 118, 225 98 C 285 78, 345 48, 405 44 C 465 40, 520 65, 580 95 C 615 112, 640 128, 655 136" fill="none" stroke="#3D70B2" stroke-width="2.4" stroke-linecap="round"/>
+
+              <!-- Cost of Goods Dashed Curve -->
+              <path d="M 45 170 C 110 166, 165 152, 225 140 C 285 128, 345 106, 405 102 C 465 98, 520 114, 580 132 C 615 142, 640 152, 655 158" fill="none" stroke="#8E8D87" stroke-width="1.8" stroke-dasharray="4 4"/>
+
+              <!-- Scrubber Line & Dots -->
+              <line id="scrub-line" x1="378" y1="20" x2="378" y2="180" stroke="currentColor" stroke-opacity="0.25" stroke-dasharray="3 3"/>
+              <circle id="scrub-dot-rev" cx="378" cy="46" r="4.5" fill="#3D70B2" stroke="#FFFFFF" stroke-width="2"/>
+              <circle id="scrub-dot-cost" cx="378" cy="104" r="4" fill="#8E8D87" stroke="#FFFFFF" stroke-width="1.5"/>
+
+              <!-- Months -->
+              <g fill="currentColor" opacity="0.45" font-size="10" text-anchor="middle">
+                <text x="45" y="198">Jan</text>
+                <text x="100" y="198">Feb</text>
+                <text x="155" y="198">Mar</text>
+                <text x="210" y="198">Apr</text>
+                <text x="265" y="198">May</text>
+                <text x="322" y="198">Jun</text>
+                <text x="378" y="198" font-weight="700" opacity="1">Jul</text>
+                <text x="434" y="198">Aug</text>
+                <text x="490" y="198">Sep</text>
+                <text x="545" y="198">Oct</text>
+                <text x="600" y="198">Nov</text>
+                <text x="655" y="198">Dec</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Right 1fr: On-time delivery Dark Gauge Card -->
+        <div class="stone-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="panel-header">
+            <span>🕒 On-time delivery</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+
+          <div class="gauge-dark-well">
+            <svg viewBox="0 0 220 120" style="width:196px; height:108px; overflow:visible;">
+              <path d="M 24 102 A 86 86 0 0 1 196 102" fill="none" stroke="#2C2C29" stroke-width="14" stroke-linecap="round"/>
+              <path d="M 24 102 A 86 86 0 0 1 188 68" fill="none" stroke="#A3E635" stroke-width="14" stroke-linecap="round"/>
+              <!-- Needle -->
+              <line x1="110" y1="102" x2="174" y2="74" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="110" cy="102" r="5" fill="#FFFFFF"/>
+            </svg>
+            <div style="font-size:28px; font-weight:500; margin-top:-6px;" class="tabular-nums">91%</div>
+            <div style="font-size:11px; color:#8E8D87; margin-top:2px;" class="tabular-nums">281 of 309 orders on time</div>
+          </div>
+
+          <div style="text-align:center; font-size:11px; color:var(--text-secondary);" class="tabular-nums">
+            Target: 92% · 12-month average: 93.2%
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 4: DASHBOARD (1:1 WITH FRAME 00:04, 00:10, 00:11)
+    ======================================================================== -->
+    <section id="view-dashboard" class="cadra-view hidden">
+      <div class="dash-top-grid">
+        <!-- Left: Good afternoon, Noor -->
+        <div class="stone-panel" style="padding: 20px 22px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-family:'JetBrains Mono', monospace; font-size:10px; font-weight:600; letter-spacing:0.06em; color:var(--color-coral); text-transform:uppercase;">WEDNESDAY, NOVEMBER 12</span>
+            <button class="btn-pill-solid">
+              <span>Open schedule</span>
+            </button>
+          </div>
+
+          <h2 style="font-size:28px; font-weight:500; letter-spacing:-0.025em; margin-top:6px;">Good afternoon, Noor.</h2>
+          <p style="font-size:12px; color:var(--text-secondary); margin-top:3px;" class="tabular-nums">You have 2 meetings today, 1 PO to approve and 3 invoices due.</p>
+
+          <div class="sched-grid">
+            <div class="sched-card" style="border-left-color: var(--color-coral);">
+              <div style="font-size:10px; color:var(--text-secondary);" class="tabular-nums">11:00 AM · 30m</div>
+              <div style="font-size:12px; font-weight:600; margin-top:2px;">Shimano Supply Sync</div>
+              <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Purchasing · Video</div>
+            </div>
+            <div class="sched-card" style="border-left-color: var(--color-blue);">
+              <div style="font-size:10px; color:var(--text-secondary);" class="tabular-nums">2:00 PM · 1h</div>
+              <div style="font-size:12px; font-weight:600; margin-top:2px;">Q4 Warehouse Audit</div>
+              <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Southwest Works</div>
+            </div>
+            <div class="sched-card" style="border-left-color: var(--color-olive);">
+              <div style="font-size:10px; color:var(--text-secondary);" class="tabular-nums">4:30 PM · 30m</div>
+              <div style="font-size:12px; font-weight:600; margin-top:2px;">Dealer Portal Review</div>
+              <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Sales · Room B</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Cash on hand -->
+        <div class="stone-panel" style="padding: 20px 22px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="panel-header" style="margin-bottom:0;">
+            <span>$ Cash on hand</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+
+          <div style="display:flex; align-items:baseline; justify-content:space-between; margin: 10px 0;">
+            <div style="font-size:32px; font-weight:500; letter-spacing:-0.03em;" class="tabular-nums" id="dash-cash-val">$221,542</div>
+            <div style="font-size:11.5px; font-weight:600; color:var(--color-olive);" class="tabular-nums">+12.4% vs last month</div>
+          </div>
+
+          <div style="background:var(--bg-card-inner); border-radius:10px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; margin-bottom:6px;">
+              <span class="tabular-nums">82%</span>
+              <span class="tabular-nums">18%</span>
+            </div>
+            <div style="height:10px; border-radius:4px; overflow:hidden; display:flex; gap:3px;">
+              <div style="width:82%; background:var(--color-olive);"></div>
+              <div style="width:18%; background:var(--color-coral);"></div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:18px; font-size:11px; color:var(--text-secondary); margin-top:10px;">
+            <span><strong style="color:var(--color-olive);">●</strong> Money in</span>
+            <span><strong style="color:var(--color-coral);">●</strong> Money out</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle 4 KPI Cards with Exact Sparklines from Frame 00:04 -->
+      <div class="kpi-grid-4">
+        <div class="kpi-card dark-card">
+          <div class="kpi-top">
+            <span>Revenue this month</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:8px; margin: 12px 0 8px;">
+            <div class="kpi-val tabular-nums" id="dash-rev-val" style="margin:0;">$93,455</div>
+            <svg viewBox="0 0 90 36" style="width:82px; height:32px; overflow:visible;">
+              <path d="M 2 30 C 20 28, 35 22, 52 18 C 68 14, 78 8, 88 4 L 88 34 L 2 34 Z" fill="rgba(163,230,53,0.18)"/>
+              <path d="M 2 30 C 20 28, 35 22, 52 18 C 68 14, 78 8, 88 4" fill="none" stroke="#A3E635" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="kpi-foot tabular-nums">18 days left · $142k target</div>
+        </div>
+
+        <div class="kpi-card blue-card">
+          <div class="kpi-top">
+            <span>Bikes built (14 days)</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:8px; margin: 12px 0 8px;">
+            <div class="kpi-val tabular-nums" style="margin:0;">57</div>
+            <svg viewBox="0 0 90 36" style="width:82px; height:32px; overflow:visible;">
+              <path d="M 2 28 C 22 26, 38 14, 56 16 C 70 18, 80 8, 88 6 L 88 34 L 2 34 Z" fill="rgba(61,112,178,0.2)"/>
+              <path d="M 2 28 C 22 26, 38 14, 56 16 C 70 18, 80 8, 88 6" fill="none" stroke="#3D70B2" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="kpi-foot tabular-nums">12 in assembly now</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span>Open order book</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:8px; margin: 12px 0 8px;">
+            <div class="kpi-val tabular-nums" style="margin:0;">$131,187</div>
+            <svg viewBox="0 0 90 36" style="width:82px; height:32px; overflow:visible;">
+              <path d="M 2 24 C 24 26, 42 18, 60 14 C 74 10, 82 12, 88 8 L 88 34 L 2 34 Z" fill="rgba(200,90,50,0.15)"/>
+              <path d="M 2 24 C 24 26, 42 18, 60 14 C 74 10, 82 12, 88 8" fill="none" stroke="#C85A32" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="kpi-foot tabular-nums">42 orders · 6 overdue</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span>On-time delivery</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:8px; margin: 12px 0 8px;">
+            <div class="kpi-val tabular-nums" style="margin:0;">91%</div>
+            <svg viewBox="0 0 90 36" style="width:82px; height:32px; overflow:visible;">
+              <path d="M 2 18 C 24 16, 44 20, 62 14 C 76 10, 82 12, 88 9 L 88 34 L 2 34 Z" fill="rgba(107,123,62,0.16)"/>
+              <path d="M 2 18 C 24 16, 44 20, 62 14 C 76 10, 82 12, 88 9" fill="none" stroke="#6B7B3E" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="kpi-foot tabular-nums">Target: 92%</div>
+        </div>
+      </div>
+
+      <!-- Bottom 3 Summary Cards -->
+      <div class="dash-bottom-grid">
+        <div class="stone-panel">
+          <div class="panel-header">
+            <span>Year at a glance</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div style="height:56px; display:flex; align-items:flex-end; gap:6px; padding-top:8px;">
+            <div style="flex:1; height:42%; background:var(--bg-slot-empty); border-radius:2px;"></div>
+            <div style="flex:1; height:50%; background:var(--bg-slot-empty); border-radius:2px;"></div>
+            <div style="flex:1; height:64%; background:var(--bg-slot-empty); border-radius:2px;"></div>
+            <div style="flex:1; height:72%; background:var(--bg-slot-empty); border-radius:2px;"></div>
+            <div style="flex:1; height:80%; background:var(--color-blue); border-radius:2px;"></div>
+            <div style="flex:1; height:90%; background:var(--color-blue); border-radius:2px;"></div>
+            <div style="flex:1; height:96%; background:var(--color-blue); border-radius:2px;"></div>
+            <div style="flex:1; height:100%; background:var(--color-blue); border-radius:2px;"></div>
+            <div style="flex:1; height:88%; background:var(--color-blue); border-radius:2px;"></div>
+            <div style="flex:1; height:76%; background:var(--bg-slot-empty); border-radius:2px;"></div>
+            <div style="flex:1; height:62%; background:var(--bg-slot-empty); border-radius:2px;"></div>
+            <div style="flex:1; height:35%; background:var(--bg-slot-empty); border-radius:2px;"></div>
+          </div>
+        </div>
+
+        <div class="stone-panel">
+          <div class="panel-header">
+            <span>Revenue &amp; cost</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; margin-top:10px;">
+            <div>
+              <div style="font-size:18px; font-weight:600;" class="tabular-nums">$1.72M</div>
+              <div style="font-size:11px; color:var(--text-secondary);">YTD Revenue</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:18px; font-weight:600; color:var(--text-secondary);" class="tabular-nums">$830k</div>
+              <div style="font-size:11px; color:var(--text-secondary);">COGS</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stone-panel">
+          <div class="panel-header">
+            <span>Sales funnel</span>
+            <span style="opacity:0.5">↗</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+            <div style="height:10px; width:100%; background:var(--color-olive); border-radius:3px;"></div>
+            <div style="height:10px; width:74%; background:var(--color-olive); opacity:0.75; border-radius:3px;"></div>
+            <div style="height:10px; width:48%; background:var(--color-olive); opacity:0.5; border-radius:3px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- =========================================================================
+       EXACT CADRA VIDEO SOURCE CODE: slidePill() + SLOT MATRICES + INTERACTIVITY
+  ========================================================================== -->
+  <script>
+    // 1. EXACT slidePill() FROM VIDEO (src > ui.ts > slidePill)
+    function slidePill(pill, box, target, animate = true) {
+      if (!pill || !box || !target) return;
+      const W = box.scrollWidth, H = box.scrollHeight;
+      const to = {
+        l: target.offsetLeft,
+        t: target.offsetTop,
+        r: W - (target.offsetLeft + target.offsetWidth),
+        b: H - (target.offsetTop + target.offsetHeight)
+      };
+      const clip = (e) =>
+        `inset(${e.t}px ${e.r}px ${e.b}px ${e.l}px round 999px)`;
+
+      if (!pill._st || !animate) {
+        pill._st = { ...to };
+        gsap.set(pill, { clipPath: clip(pill._st) });
+        return;
+      }
+
+      const st = pill._st, fwd = to.l > st.l;
+      const [lead, trail] = fwd ? ['r', 'l'] : ['l', 'r'];
+      const draw = () => gsap.set(pill, { clipPath: clip(st) });
+
+      gsap.killTweensOf(st);
+      st.t = to.t;
+      st.b = to.b;
+
+      // the leading edge goes first and faster; the trailing follows
+      gsap.to(st, {
+        [lead]: to[lead],
+        duration: 0.36,
+        ease: 'power3.out',
+        onUpdate: draw
+      });
+      gsap.to(st, {
+        [trail]: to[trail],
+        duration: 0.55,
+        ease: 'power3.inOut',
+        onUpdate: draw
+      });
+    }
+
+    // 2. BUILD EXACT WAREHOUSE GRIDS (10x10 Blue, 10x5 Coral, 10x6 Olive)
+    const warehouseConfigs = [
+      { id: 'grid-sw', total: 100, filled: 74, color: 'var(--color-blue)', cat: 'parts' },
+      { id: 'grid-div', total: 50, filled: 34, color: 'var(--color-coral)', cat: 'finished' },
+      { id: 'grid-east', total: 60, filled: 29, color: 'var(--color-olive)', cat: 'finished' }
+    ];
+
+    function renderWarehouseGrids(filter = 'all') {
+      warehouseConfigs.forEach(cfg => {
+        const container = document.getElementById(cfg.id);
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 0; i < cfg.total; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'slot-cell';
+          const isFilled = i < cfg.filled;
+          const matchesFilter = filter === 'all' || filter === cfg.cat;
+          if (isFilled && matchesFilter) {
+            cell.style.backgroundColor = cfg.color;
+          } else if (isFilled && !matchesFilter) {
+            cell.style.backgroundColor = cfg.color;
+            cell.style.opacity = '0.22';
+          } else {
+            cell.style.backgroundColor = 'var(--bg-slot-empty)';
+          }
+          container.appendChild(cell);
+        }
+      });
+    }
+
+    // 3. CHARACTER-ROLLING TITLE TRANSITION (Seen at 00:05 -> 00:06)
+    const pageTitleEl = document.getElementById('page-title');
+    let currentTitleText = 'Warehouses';
+
+    function rollTitleTo(newText) {
+      if (newText === currentTitleText) return;
+      currentTitleText = newText;
+      pageTitleEl.innerHTML = '';
+      [...newText].forEach((ch) => {
+        const span = document.createElement('span');
+        span.className = 'char-slot';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        pageTitleEl.appendChild(span);
+      });
+      gsap.fromTo(
+        pageTitleEl.querySelectorAll('.char-slot'),
+        { yPercent: 95, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.42, stagger: 0.018, ease: 'power3.out' }
+      );
+    }
+
+    // 4. VIEW SWITCHING LOGIC
+    const topNavBox = document.getElementById('top-nav-box');
+    const topNavPill = document.getElementById('top-nav-pill');
+    const stockSubBox = document.getElementById('stock-subnav-box');
+    const stockSubPill = document.getElementById('stock-subnav-pill');
+    const repSubBox = document.getElementById('reporting-subnav-box');
+    const repSubPill = document.getElementById('reporting-subnav-pill');
+
+    const stockSubRow = document.getElementById('stock-subnav-row');
+    const repSubRow = document.getElementById('reporting-subnav-row');
+    const dashDivider = document.getElementById('dashboard-divider');
+    const pageEyebrow = document.getElementById('page-eyebrow');
+    const btnStockExport = document.getElementById('btn-stock-export');
+
+    let activeModule = 'stock';
+    let activeStockSubview = 'warehouses';
+
+    function animateNumber(el, start, end, prefix = '', suffix = '') {
+      if (!el) return;
+      const obj = { val: start };
+      gsap.to(obj, {
+        val: end,
+        duration: 0.65,
+        ease: 'power2.out',
+        onUpdate: () => {
+          el.textContent = prefix + Math.round(obj.val).toLocaleString('en-US') + suffix;
+        }
+      });
+    }
+
+    function autoCountUpAllNumbers(container) {
+      const nodes = container.querySelectorAll('.tabular-nums');
+      nodes.forEach((node, idx) => {
+        if (node.children.length > 0) return;
+        if (!node.dataset.origText) {
+          node.dataset.origText = node.textContent;
+        }
+        const raw = node.dataset.origText;
+        const match = raw.match(/([0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(\.[0-9]+)?/);
+        if (!match) return;
+        const fullNumStr = match[0];
+        const targetVal = parseFloat(fullNumStr.replace(/,/g, ''));
+        if (isNaN(targetVal) || targetVal === 0) return;
+        const hasCommas = fullNumStr.includes(',');
+        const decPart = match[2] ? match[2].length - 1 : 0;
+        const startIdx = match.index;
+        const before = raw.slice(0, startIdx);
+        const after = raw.slice(startIdx + fullNumStr.length);
+
+        const proxy = { val: 0 };
+        gsap.killTweensOf(proxy);
+        gsap.to(proxy, {
+          val: targetVal,
+          duration: 0.72,
+          delay: 0.06 + Math.min(idx * 0.015, 0.3),
+          ease: 'power3.out',
+          onUpdate: () => {
+            const formatted = hasCommas || decPart > 0
+              ? proxy.val.toLocaleString('en-US', { minimumFractionDigits: decPart, maximumFractionDigits: decPart })
+              : Math.round(proxy.val).toString();
+            node.textContent = before + formatted + after;
+          }
+        });
+      });
+    }
+
+    function showView(viewId) {
+      document.querySelectorAll('.cadra-view').forEach(v => v.classList.add('hidden'));
+      const target = document.getElementById(viewId);
+      if (target) {
+        target.classList.remove('hidden');
+
+        // 1. Outer Cards & Panels Slide & Scale In
+        const cards = target.querySelectorAll('.wh-card, .kpi-card, .stone-panel');
+        gsap.fromTo(cards,
+          { y: 32, scale: 0.95, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, duration: 0.48, stagger: 0.055, ease: 'power3.out', clearProps: 'transform' }
+        );
+
+        // 2. Inner Boxes, Headers, Filter Links & Schedule Cards Slide In
+        const innerBoxes = target.querySelectorAll('.wh-header-box, .chart-inner-box, .gauge-dark-well, .sched-card, .filter-link');
+        if (innerBoxes.length) {
+          gsap.fromTo(innerBoxes,
+            { y: 16, x: -12, opacity: 0 },
+            { y: 0, x: 0, opacity: 1, duration: 0.42, stagger: 0.035, delay: 0.06, ease: 'power3.out' }
+          );
+        }
+
+        // 3. All Inner Titles, Labels, Footers & Value Headings Cascade In
+        const textNodes = target.querySelectorAll('.wh-title, .wh-sub, .wh-value-heading, .wh-sku-name, .kpi-top, .kpi-foot, .panel-header');
+        if (textNodes.length) {
+          gsap.fromTo(textNodes,
+            { y: 10, x: -8, opacity: 0 },
+            { y: 0, x: 0, opacity: 1, duration: 0.36, stagger: 0.015, delay: 0.08, ease: 'power2.out' }
+          );
+        }
+
+        // 4. SKU Items & Value Rows Slide In From Right
+        const skuItems = target.querySelectorAll('.wh-sku-item');
+        if (skuItems.length) {
+          gsap.fromTo(skuItems,
+            { x: 22, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.4, stagger: 0.045, delay: 0.12, ease: 'power3.out' }
+          );
+        }
+
+        // 5. Auto Count-Up Every Number In View
+        autoCountUpAllNumbers(target);
+
+        // 6. View-Specific Deep Choreography
+        if (viewId === 'view-warehouses') {
+          gsap.fromTo('#view-warehouses .slot-cell',
+            { scale: 0.2, y: 6, opacity: 0 },
+            { scale: 1, y: 0, opacity: 1, duration: 0.3, stagger: 0.0022, delay: 0.08, ease: 'back.out(1.8)' }
+          );
+        } else if (viewId === 'view-reporting') {
+          gsap.fromTo('#rep-chart-stage svg path',
+            { clipPath: 'inset(0 100% 0 0)' },
+            { clipPath: 'inset(0 0% 0 0)', duration: 0.85, stagger: 0.08, delay: 0.12, ease: 'power3.out' }
+          );
+          gsap.fromTo('#rep-tooltip',
+            { y: 16, scale: 0.88, opacity: 0 },
+            { y: 0, scale: 1, opacity: 1, duration: 0.44, delay: 0.3, ease: 'back.out(1.7)' }
+          );
+          gsap.fromTo('.gauge-dark-well svg path[stroke="#A3E635"]',
+            { strokeDasharray: 270, strokeDashoffset: 270 },
+            { strokeDashoffset: 0, duration: 0.9, delay: 0.16, ease: 'power3.out' }
+          );
+          gsap.fromTo('.gauge-dark-well svg line',
+            { rotation: -115, svgOrigin: '110 102' },
+            { rotation: 0, duration: 0.9, delay: 0.16, ease: 'back.out(1.4)' }
+          );
+        } else if (viewId === 'view-dashboard') {
+          gsap.fromTo(target.querySelectorAll('.kpi-card svg path'),
+            { clipPath: 'inset(0 100% 0 0)' },
+            { clipPath: 'inset(0 0% 0 0)', duration: 0.75, stagger: 0.05, delay: 0.14, ease: 'power3.out' }
+          );
+          gsap.fromTo(target.querySelectorAll('div[style*="width:82%"], div[style*="width:18%"]'),
+            { scaleX: 0, transformOrigin: 'left center' },
+            { scaleX: 1, duration: 0.7, stagger: 0.08, delay: 0.14, ease: 'expo.out' }
+          );
+          gsap.fromTo(target.querySelectorAll('.dash-bottom-grid .stone-panel div[style*="border-radius:2px"]'),
+            { scaleY: 0, transformOrigin: 'bottom center' },
+            { scaleY: 1, duration: 0.58, stagger: 0.03, delay: 0.16, ease: 'expo.out' }
+          );
+          gsap.fromTo(target.querySelectorAll('.dash-bottom-grid .stone-panel div[style*="border-radius:3px"]'),
+            { scaleX: 0, transformOrigin: 'left center' },
+            { scaleX: 1, duration: 0.62, stagger: 0.07, delay: 0.18, ease: 'expo.out' }
+          );
+        } else if (viewId === 'view-stock-overview') {
+          gsap.fromTo(target.querySelectorAll('.stone-panel div[style*="width: 44%"], .stone-panel div[style*="width: 35%"], .stone-panel div[style*="width: 21%"]'),
+            { scaleX: 0, transformOrigin: 'left center' },
+            { scaleX: 1, duration: 0.68, stagger: 0.08, delay: 0.12, ease: 'expo.out' }
+          );
+        }
+      }
+    }
+
+    function activateModule(mod, animate = true) {
+      activeModule = mod;
+      const btn = document.querySelector(`.top-mod-btn[data-module="${mod}"]`);
+      slidePill(topNavPill, topNavBox, btn, animate);
+
+      stockSubRow.classList.add('hidden');
+      repSubRow.classList.add('hidden');
+      dashDivider.classList.add('hidden');
+
+      if (mod === 'stock') {
+        pageEyebrow.textContent = '';
+        stockSubRow.classList.remove('hidden');
+        activateStockSubview(activeStockSubview, false);
+      } else if (mod === 'reporting') {
+        pageEyebrow.textContent = 'Reporting';
+        repSubRow.classList.remove('hidden');
+        rollTitleTo('Overview');
+        showView('view-reporting');
+        const repBtn = document.querySelector('.rep-sub-btn[data-repview="overview"]');
+        requestAnimationFrame(() => slidePill(repSubPill, repSubBox, repBtn, false));
+      } else {
+        pageEyebrow.textContent = '';
+        dashDivider.classList.remove('hidden');
+        const label = mod === 'dashboard' ? 'Dashboard' : mod.charAt(0).toUpperCase() + mod.slice(1);
+        rollTitleTo(label);
+        showView('view-dashboard');
+      }
+    }
+
+    function activateStockSubview(sub, animate = true) {
+      activeStockSubview = sub;
+      const subBtn = document.querySelector(`.stock-sub-btn[data-subview="${sub}"]`);
+      slidePill(stockSubPill, stockSubBox, subBtn, animate);
+
+      if (sub === 'warehouses') {
+        btnStockExport.classList.add('hidden');
+        rollTitleTo('Warehouses');
+        showView('view-warehouses');
+      } else {
+        btnStockExport.classList.remove('hidden');
+        rollTitleTo('Stock');
+        showView('view-stock-overview');
+      }
+    }
+
+    // Bind Top Module Buttons
+    document.querySelectorAll('.top-mod-btn').forEach(btn => {
+      btn.addEventListener('click', () => activateModule(btn.dataset.module, true));
+    });
+
+    // Bind Stock Subnav Buttons
+    document.querySelectorAll('.stock-sub-btn').forEach(btn => {
+      btn.addEventListener('click', () => activateStockSubview(btn.dataset.subview, true));
+    });
+
+    // Bind Reporting Subnav Buttons
+    document.querySelectorAll('.rep-sub-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        slidePill(repSubPill, repSubBox, btn, true);
+      });
+    });
+
+    // Bind Warehouse Filter Buttons
+    document.querySelectorAll('.filter-link').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-link').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderWarehouseGrids(btn.dataset.filter);
+      });
+    });
+
+    // 5. LIGHT / DARK THEME SWITCHER (Left Dock Sun/Moon)
+    const btnLight = document.getElementById('btn-theme-light');
+    const btnDark = document.getElementById('btn-theme-dark');
+
+    btnLight.addEventListener('click', () => {
+      document.documentElement.classList.remove('dark');
+      btnLight.classList.add('active');
+      btnDark.classList.remove('active');
+    });
+
+    btnDark.addEventListener('click', () => {
+      document.documentElement.classList.add('dark');
+      btnDark.classList.add('active');
+      btnLight.classList.remove('active');
+    });
+
+    // 6. INTERACTIVE CHART SCRUBBER IN REPORTING
+    const chartStage = document.getElementById('rep-chart-stage');
+    const scrubLine = document.getElementById('scrub-line');
+    const scrubRev = document.getElementById('scrub-dot-rev');
+    const scrubCost = document.getElementById('scrub-dot-cost');
+    const tipBox = document.getElementById('rep-tooltip');
+    const tipMonth = document.getElementById('tip-month');
+    const tipRev = document.getElementById('tip-rev');
+    const tipCost = document.getElementById('tip-cost');
+
+    const chartPoints = [
+      { m: 'Jan', x: 45, ry: 155, cy: 170, rev: 112, cost: 64 },
+      { m: 'Feb', x: 100, ry: 146, cy: 164, rev: 128, cost: 68 },
+      { m: 'Mar', x: 155, ry: 124, cy: 154, rev: 154, cost: 74 },
+      { m: 'Apr', x: 210, ry: 102, cy: 142, rev: 176, cost: 81 },
+      { m: 'May', x: 265, ry: 82, cy: 130, rev: 194, cost: 88 },
+      { m: 'Jun', x: 322, ry: 58, cy: 114, rev: 208, cost: 91 },
+      { m: 'Jul', x: 378, ry: 46, cy: 104, rev: 219, cost: 94 },
+      { m: 'Aug', x: 434, ry: 44, cy: 101, rev: 226, cost: 97 },
+      { m: 'Sep', x: 490, ry: 54, cy: 108, rev: 214, cost: 92 },
+      { m: 'Oct', x: 545, ry: 76, cy: 120, rev: 192, cost: 86 },
+      { m: 'Nov', x: 600, ry: 104, cy: 136, rev: 168, cost: 79 },
+      { m: 'Dec', x: 655, ry: 136, cy: 158, rev: 131, cost: 69 }
+    ];
+
+    if (chartStage) {
+      chartStage.addEventListener('pointermove', (e) => {
+        const rect = chartStage.getBoundingClientRect();
+        const rel = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const idx = Math.min(11, Math.max(0, Math.round(rel * 11)));
+        const pt = chartPoints[idx];
+        scrubLine.setAttribute('x1', pt.x);
+        scrubLine.setAttribute('x2', pt.x);
+        scrubRev.setAttribute('cx', pt.x);
+        scrubRev.setAttribute('cy', pt.ry);
+        scrubCost.setAttribute('cx', pt.x);
+        scrubCost.setAttribute('cy', pt.cy);
+        tipMonth.textContent = pt.m;
+        tipRev.textContent = '$' + pt.rev + 'k';
+        tipCost.textContent = '$' + pt.cost + 'k';
+        tipBox.style.left = Math.min(82, Math.max(18, (pt.x / 680) * 100)) + '%';
+      });
+    }
+
+    // Initialize on load and resize
+    window.addEventListener('DOMContentLoaded', () => {
+      renderWarehouseGrids('all');
+      const initTopBtn = document.querySelector('.top-mod-btn[data-module="stock"]');
+      const initSubBtn = document.querySelector('.stock-sub-btn[data-subview="warehouses"]');
+      slidePill(topNavPill, topNavBox, initTopBtn, false);
+      slidePill(stockSubPill, stockSubBox, initSubBtn, false);
+
+      // Full-page initial load choreography
+      gsap.fromTo('.left-dock', { x: -28, opacity: 0 }, { x: 0, opacity: 1, duration: 0.48, ease: 'power3.out' });
+      gsap.fromTo('.left-dock .dock-btn, .left-dock .theme-btn', { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.36, stagger: 0.035, delay: 0.1, ease: 'back.out(1.7)' });
+      gsap.fromTo('.topbar .brand', { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.42, ease: 'power3.out' });
+      gsap.fromTo('#top-nav-box', { y: -16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.44, delay: 0.05, ease: 'power3.out' });
+      gsap.fromTo('.topbar-right > *', { x: 18, opacity: 0 }, { x: 0, opacity: 1, duration: 0.38, stagger: 0.06, delay: 0.08, ease: 'power3.out' });
+      gsap.fromTo('.header-middle-links > *, .header-telemetry > *', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.04, delay: 0.1, ease: 'power3.out' });
+      gsap.fromTo('#stock-subnav-row > *', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, delay: 0.12, ease: 'power3.out' });
+
+      currentTitleText = '';
+      rollTitleTo('Warehouses');
+      showView('view-warehouses');
+    });
+
+    window.addEventListener('resize', () => {
+      const topBtn = document.querySelector(`.top-mod-btn[data-module="${activeModule}"]`);
+      slidePill(topNavPill, topNavBox, topBtn, false);
+      if (activeModule === 'stock') {
+        const subBtn = document.querySelector(`.stock-sub-btn[data-subview="${activeStockSubview}"]`);
+        slidePill(stockSubPill, stockSubBox, subBtn, false);
+      }
+    });
+  </script>
+</body>
+</html>
