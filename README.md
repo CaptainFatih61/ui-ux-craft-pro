@@ -4,9 +4,6 @@ A unified, single-source design and frontend engineering skill for AI coding age
 
 Built upon [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) and strengthened by unifying proven methodologies from five flagship agent skill systems (`pbakaus/impeccable`, `Leonxlnx/taste-skill`, `arham777/ui-ux-kit`, `vercel-labs/agent-skills`, and `Light0305/Light-UI-UX`).
 
-![Cadra Telemetry Showcase](assets/cadra-dashboard.webp)
-*Rendered directly from `projects/cadra-dashboard/index.html` (0 violations, 0 warnings under `audit_anti_slop.py --strict`).*
-
 ---
 
 ## Unified 6-in-1 Skill Synthesis
@@ -117,7 +114,6 @@ Copy-Item SKILL.md, data, references, scripts -Destination $dst -Recurse -Force
 ├── data/            # 36 zero-network BM25 CSV tables (incl. stage-archetypes & motion)
 ├── references/      # Taste/surface gates, Vercel React engineering, optics, choreography & UX
 ├── scripts/         # search.py, audit_anti_slop.py, extract_studio_cutout.py, validate-csv.py
-├── assets/          # Verified 1440×900 WebP showcase preview
 └── projects/        # Flagship zero-dependency HTML showcases passing --strict audit
 ```
 
