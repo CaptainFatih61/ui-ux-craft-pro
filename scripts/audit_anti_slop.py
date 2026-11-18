@@ -37,8 +37,20 @@ SLOP_COPYWRITING = [
     (re.compile(r"\bsupercharge\s+your\b", re.I), "Generic AI hype copy cliché ('Supercharge your')"),
     (re.compile(r"\bstreamline\s+your\s+workflow\b", re.I), "Generic AI hero headline cliché ('Streamline your workflow')"),
     (re.compile(r"\blike\s+never\s+before\b", re.I), "Generic AI hype copy cliché ('Like never before')"),
+    (re.compile(r"\bempower\s+your\b", re.I), "Generic AI hype copy cliché ('Empower your')"),
+    (re.compile(r"\bnext-gen\s+platform\b", re.I), "Generic AI hype copy cliché ('Next-gen platform')"),
+    (re.compile(r"\bseamless\s+solutions?\b", re.I), "Generic AI hype copy cliché ('Seamless solutions')"),
+    (re.compile(r"\belevate\s+your\s+workflow\b", re.I), "Generic AI hype copy cliché ('Elevate your workflow')"),
+    (re.compile(r"\bwelcome\s+back,\s*Alex\b", re.I), "Generic SaaS workbench welcome banner cliché ('Welcome back, Alex')"),
+    (re.compile(r">\s*(?:Hero\s+Section|Bento\s+Grid)\s*<", re.I), "Visible prompt meta-leakage label rendered in DOM"),
     (re.compile(r"\b(?:SaaSify|NexusAI|AetherFlow)\b", re.I), "Generic AI SaaS brand cliché"),
     (re.compile(r"\bAlex\s+Chen\b", re.I), "Generic AI placeholder persona cliché ('Alex Chen')"),
+]
+
+SURFACE_SLOP_CHECKS = [
+    (re.compile(r"\bborder-[lt]-(?:[3-9]|\[\d+px\])\b"), "Decorative thick colored side/top card stripe (Tailwind border-l/t)"),
+    (re.compile(r"border-(?:left|top):\s*[3-9]\d*px\s+solid", re.I), "Decorative thick colored side/top stripe (use 1px full outline or dot)"),
+    (re.compile(r"box-shadow:\s*0(?:px)?\s+0(?:px)?\s+(?:1[6-9]|[2-9]\d)px\b", re.I), "Zero-offset neon glow box-shadow (use physical offset depth)"),
 ]
 
 ROBOTIC_TRANSITIONS = [
@@ -52,6 +64,7 @@ ACCESSIBILITY_CHECKS = [
     (re.compile(r"<button\b(?![^>]*aria-label)(?![^>]*aria-labelledby)[^>]*>\s*<svg", re.I), "Icon-only button missing aria-label"),
     (re.compile(r"<img\b(?![^>]*\balt=)[^>]*>", re.I), "Image tag missing alt attribute"),
     (re.compile(r"user-scalable\s*=\s*no", re.I), "Viewport meta disables user scaling (accessibility violation)"),
+    (re.compile(r'tabindex\s*=\s*["\'][1-9]', re.I), "Positive tabindex breaks natural keyboard focus order (use 0 or -1)"),
 ]
 
 PRICE_TABULAR_CHECK = re.compile(r"(?:[\$\€\£\₺]|USD|EUR)\s*\d+[\d\.,]*")
@@ -78,10 +91,25 @@ def audit_file(filepath: Path):
             if pattern.search(line):
                 warnings.append((i, "SLOP_COPYWRITING", desc, line.strip()[:80]))
 
-        # 1c. Robotic transition checks
+        # 1c. Surface slop checks (side stripe / zero-offset neon glow)
+        for pattern, desc in SURFACE_SLOP_CHECKS:
+            if pattern.search(line):
+                warnings.append((i, "SURFACE_SLOP", desc, line.strip()[:80]))
+
+        # 1d. Horizontal overflow without overflow-y:hidden triggers phantom cross-axis scrollbars
+        if re.search(r"overflow-x\s*:\s*auto\b", line, re.I):
+            ctx = " ".join(lines[max(0, i - 5):min(len(lines), i + 5)])
+            if not re.search(r"overflow-y\s*:\s*hidden|scrollbar-width\s*:\s*none", ctx, re.I):
+                warnings.append((i, "PHANTOM_SCROLLBAR", "overflow-x: auto without overflow-y: hidden or scrollbar-width: none", line.strip()[:80]))
+
+        # 1e. Robotic transition checks
         for pattern, desc in ROBOTIC_TRANSITIONS:
             if pattern.search(line):
                 warnings.append((i, "ROBOTIC_TRANSITION", desc, line.strip()[:80]))
+
+        # 1f. React 19 composition check (prefer ref prop over legacy forwardRef)
+        if filepath.suffix.lower() in {".tsx", ".jsx"} and re.search(r"\bforwardRef\s*\(", line):
+            warnings.append((i, "REACT19_FORWARD_REF", "React 19 prefers direct ref prop instead of React.forwardRef wrapper", line.strip()[:80]))
 
         # 2. Accessibility checks
         for pattern, desc in ACCESSIBILITY_CHECKS:
@@ -110,6 +138,8 @@ def audit_file(filepath: Path):
             violations.append((1, "A11Y_VIEWPORT", "HTML missing viewport meta tag entirely", ""))
         if "<body" in content and not MOTION_ENGINE_MARKER.search(content):
             warnings.append((1, "DEAD_STATIC_PAGE", "HTML has no living motion/spring engine (gsap, @keyframes, cubic-bezier, or requestAnimationFrame)", ""))
+        if re.search(r"<h1\b", content, re.I) and re.search(r"<h3\b", content, re.I) and not re.search(r"<h2\b", content, re.I):
+            warnings.append((1, "SKIPPED_HEADING", "HTML jumps from <h1> to <h3> without an intervening <h2>", ""))
         svg_primitives = len(re.findall(r"<(?:circle|ellipse)\b", content, re.I))
         has_large_stage_svg = bool(re.search(r'viewBox=["\']0\s+0\s+[3-9]\d\d\s+[3-9]\d\d["\']', content))
         has_photo_img = bool(re.search(r"<img\b[^>]+src=", content, re.I))

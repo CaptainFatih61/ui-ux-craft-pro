@@ -227,10 +227,13 @@ Then synthesize the design system + detailed searches and implement.
 
 ## 4-Pillar Craft & Living Stage Architecture (MANDATORY ANTI-SLOP STANDARD)
 
-When building or redesigning web applications, dashboards, e-commerce stores, fintech interfaces, or flagship landing pages, **never deliver generic AI slop** (dead static `Hero + 3 boxes`, purple/indigo gradients, hype copy like `"10x faster"` or `"Unleash the power"`, or robotic `transition: all ... ease`). Read `references/living-ui-choreography.md` and `references/craft-physics-and-optics.md` before coding, and apply all four craft pillars:
+When building or redesigning web applications, dashboards, e-commerce stores, fintech interfaces, React/Next.js apps, or flagship landing pages, **never deliver generic AI slop**. Read `references/taste-and-surface-gates.md`, `references/living-ui-choreography.md`, and `references/craft-physics-and-optics.md` before coding (plus `references/vercel-react-and-web-engineering.md` when the stack is React/Next.js), and apply all four craft pillars:
 
-### Pillar 1 — TASTE (`--domain stage` Interactive Stage Archetypes)
-Reject flat, generic card grids. Query `--domain stage` to pick a spatial, interactive stage archetype tailored to the product domain rather than defaulting to a static template:
+### Pillar 1 — TASTE (Dual-Axis Router + Stage Archetypes)
+Route every task along `references/taste-and-surface-gates.md` before writing CSS:
+- **4 Visitor Modes**: `Persuade` (visual world leads, `100svh` hero at `700–800px` heights, plain 50/50 split fails by default without an explicit spatial move), `Operate` (toolbar $\le 28\text{--}34\text{px}$, zero welcome banners, $10\text{--}20+$ operable items in viewport 1), `Read` (`60–75ch` quiet reading column), `Experience` (artifact leads from pixel 0).
+- **6 Trade Kinds**: `software`, `gaming`, `tech` (max `1` focal WebGL/shader or kinetic stage) vs. `product`, `service`, `place` (real studio/location photography, flat tokens, photo/type moments — no sci-fi glow).
+- **Category-Reflex Test & Falsifiable Concept**: Reject predictable domain defaults (fintech=navy+gold, AI=indigo-purple gradient, editorial=#F5EFE6+Fraunces). Commit to a falsifiable 1-sentence organizing concept across $\ge 3$ axes and query `--domain stage` to pick from the 12 interactive stage archetypes:
 - `tactile-builder-stage` (Live Canvas + Receipt/Ticket Configurator)
 - `boutique-rail-showcase` (Horizontal Garment/Product Rail + Tray Checkout)
 - `dof-runway-hotspots` (Depth-of-Field Lookbook + Pulsing Shoppable Bundle Drawer)
@@ -244,18 +247,19 @@ Reject flat, generic card grids. Query `--domain stage` to pick a spatial, inter
 - `fintech-glass-cockpit` (Clip-Path `slidePill` Chrome + Frozen-Glass Card & Spline Scrubber)
 - `editorial-collage-story` (Asymmetric Collage Layers + Hairline Spec Index)
 
-### Pillar 2 — IMPECCABLE (Optics, Surface Elevation & Typography)
-- **3-Tier Surface Elevation Ladder**: Separate `Surface 0 (Canvas)` -> `Surface 1 (Shell / Well)` -> `Surface 2 (Card)` via deliberate luminance steps instead of flat gray boxes with heavy `shadow-md` drop shadows.
-- **Concentric Corner Geometry & 1px Specular Hairlines**: Enforce $R_{\text{outer}} = R_{\text{inner}} + \text{Padding}$ for nested cards/buttons and crisp `1px` translucent borders (`rgba(255,255,255,0.12)` dark / `rgba(15,23,42,0.08)` light).
-- **Characterful Typography & Tabular Precision**: Pair expressive editorial/geometric faces (`Instrument Serif`, `Plus Jakarta Sans`, `JetBrains Mono`) with tight heading tracking (`-0.025em`) and enforce `font-variant-numeric: tabular-nums` on all dynamic metrics, timers, counters, and prices.
-- **Multi-Layer Card Anatomy**: Never ship bare `label + number` boxes; pair every key metric card with contextual sparklines, dot-matrices, status pills, or interactive scrubbers.
+### Pillar 2 — IMPECCABLE (Optics, Typography, Surfaces & 19 Zero-Tolerance Bans)
+- **3-Tier Surface Elevation & OKLCH Derived Dark Mode**: Separate `Surface 0 (Canvas)` -> `Surface 1 (Shell / Well)` -> `Surface 2 (Card)` via tinted OKLCH neutrals (`chroma ~0.005–0.01`). Elevate dark mode surfaces by lightness (`inset 0 1px` bevels), never raw hex inversion, and recompute WCAG AA contrast independently (`≥4.5:1` body, `OKLCH ΔL ≥ 45` pre-check).
+- **Concentric Corner Geometry & Themed Chrome**: Enforce $R_{\text{outer}} = R_{\text{inner}} + \text{Padding}$, `1px` specular hairlines, and palette-themed browser surfaces (`::selection`, `caret-color`, thin scrollbars, `:focus-visible`, `tabular-nums`, `overflow-y: hidden` on snap rails).
+- **3-Move Typography & Dual-Track Law**: Choose via *Personality -> Category -> Face* (`references/taste-and-surface-gates.md` §2). Apply tight Latin display tracking (`-0.025em`) vs. generous CJK display leading (`line-height: 1.25–1.40`, tracking `≥0`). Enforce Single-Ruler & Number-Deduplication laws.
+- **Enforce the 19 Bans & Hard Subtraction Budgets**: Zero kickers/eyebrows above headings, zero nested cards or `3-equal icon tiles`, zero thick colored side stripes (`border-left: 3px+`), zero unrequested `background-clip: text` gradients, zero zero-offset neon halos, zero structural emojis, zero placeholder hype copy (`SaaSify`, `Alex Chen`, `10x faster`), and ≤4 simultaneous choices per decision point (Cowan's Law).
 - **Photorealistic Product & Apparel Stage Assets (Neural Cutout Pipeline & State Fidelity)**: Never draw organic physical products or ingredient tiles with vector SVG clip-art, and never use naive pixel/PowerShell flood-fill on models or garments. Use border-seeded flood-fill only on flat `#FFFFFF`-isolated top-down icons; for human subjects, apparel, footwear, and studio shots, run `scripts/extract_studio_cutout.py` (`rembg` + `distance_transform_edt` de-haloing), verify via a dual-tone `--contact-sheet`, and on `Cook / Bake / Submit` always crossfade to a **bare** finished base while transforming ONLY the user's selected layers.
 
-### Pillar 3 — EMIL KOWALSKI MOTION (Physics & Context-Aware Choreography)
+### Pillar 3 — MOTION, STEERING & REACT ARCHITECTURE
 - **Asymmetric Spring Curves**: Scope transitions strictly to composited properties (`transform`, `opacity`, `clip-path`, `border-color`, `background-color`) using spring deceleration curves (`cubic-bezier(0.16, 1, 0.3, 1)` or `cubic-bezier(0.22, 1, 0.36, 1)`). Never use `transition: all ... ease`.
 - **Tactile Press Feedback**: Give interactive buttons and cards a subtle `transform: scale(0.98)` active press response.
-- **Layered Entrances & Context-Aware Staggers**: Build multi-layer entrance cascades (chrome -> headline -> hero stage -> telemetry controls), use 2D `grid: 'auto', from: 'start'` waves for dense card grids, `slidePill` clip-path indicators (`0.36s` lead / `0.55s` trail), `240ms` skeleton-to-stagger tab switches, and `countUp` numeric settles.
-- **Stage Blueprints & Snippets**: Follow Blueprints 1–13 in `references/living-ui-choreography.md` and query `--domain gsap`:
+- **Layered Entrances & Context-Aware Staggers**: Build multi-layer entrance cascades, use 2D `grid: 'auto', from: 'start'` waves for dense grids, `slidePill` clip-path indicators, `240ms` skeleton-to-stagger switches, and `countUp` numeric settles.
+- **Vercel React / Next.js Rules (`references/vercel-react-and-web-engineering.md`)**: When building React/Next.js apps, eliminate async waterfalls (`Promise.all`, early guards before `await`), avoid barrel imports & prop booleans (use compound components + `React 19` direct `ref` + `use()`), keep scroll/mouse ticks in `useRef` (never React state), derive state in render, and pull matching CWV/GSAP presets:
+- **Design Steering Verbs**: Support focused refinements via `polish`, `bolder`, `quieter`, `distill`, `harden`, and `critique` (Two-Round Non-Destructive Diagnose -> Token-Root Refactor; score cognitive load & Nielsen's 10 heuristics).
 ```bash
 python scripts/search.py "pizza restaurant customizer" --domain stage
 python scripts/search.py "elastic clip-path pill" --domain gsap
@@ -267,10 +271,10 @@ python scripts/search.py "counter flip intro" --domain gsap
 
 ### Pillar 4 — SELF-AUDIT (Mandatory Visual & Automated Gate)
 
-1. **Checklist & Cutout Inspection**: Read `references/pro-rules.md` (and `references/craft-physics-and-optics.md` §7 if using photographic cutouts) and confirm every dual-tone contact sheet is clean (`0` background rectangles, holes, or halos).
-2. **Mandatory Headless Browser Screenshot Gate**: Before presenting any visual UI to the user, serve it over a local HTTP server, capture `1920x1080` screenshots in headless Chrome/Edge (`--headless=new --disable-gpu --hide-scrollbars --window-size=1920,1080 --virtual-time-budget=3000 --screenshot=...`) across primary and interactive/drawer states (`?mode=detail`), and inspect every screenshot with `read_file` to catch and fix layout/cutout defects upfront.
+1. **Checklist & Cutout Inspection**: Read `references/pro-rules.md`, `references/taste-and-surface-gates.md` (and `references/craft-physics-and-optics.md` §7 if using photographic cutouts) and confirm cognitive load ($\le 4$ choices/decision), contrast math, and clean dual-tone contact sheets (`0` background rectangles, holes, or halos).
+2. **Mandatory Headless Browser Screenshot Gate**: Before presenting any visual UI to the user, serve it over a local HTTP server, capture `1920x1080` (`and 390px` mobile / `700–800px` hero containment) screenshots in headless Chrome/Edge (`--headless=new --disable-gpu --hide-scrollbars --window-size=1920,1080 --virtual-time-budget=3000 --screenshot=...`) across primary and interactive/drawer states (`?mode=detail`), and inspect every screenshot with `read_file` to fix layout/cutout defects upfront.
 3. **Automated Strict Anti-Slop Audit**: Run the zero-dependency audit gate against the built project before final delivery:
    ```bash
    python scripts/audit_anti_slop.py <target> --strict
    ```
-   Ensures 0 slop gradients, 0 hype copywriting clichés, 0 robotic `transition: all` warnings, active Living Motion engine usage, valid responsive viewports, focus rings, and accessible icon labels.
+   Enforces zero AI purple/indigo gradients, zero hype copy/personas, zero thick colored side stripes or neon glow halos, phantom horizontal scrollbar prevention, sequential headings, valid `tabular-nums`, React 19 patterns, Living Motion engine presence, responsive viewports, focus rings, and accessible labels.

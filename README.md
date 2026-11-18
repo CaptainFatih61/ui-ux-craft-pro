@@ -1,24 +1,33 @@
 # UI/UX Craft Pro (`ui-ux-pro-max`)
 
-A lean, single-source design engineering skill for AI coding agents — upgrading standard web, SaaS, dashboard, e-commerce, and app interfaces with mathematical optical rules, interactive stage archetypes, asymmetric spring physics, and a deterministic `--strict` anti-slop audit gate.
+A unified, single-source design and frontend engineering skill for AI coding agents — synthesizing structural taste, optical mathematics, surface-aware routing, React/Next.js performance engineering, interactive stage archetypes, asymmetric spring physics, and a deterministic `--strict` audit gate in one lightweight repository (`~2.3 MB`).
 
-Built upon [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), stripped of multi-platform mirror bloat and hardened with strict optical, motion, cutout, and browser-verification gates.
+Built upon [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) and strengthened by unifying proven methodologies from five flagship agent skill systems (`pbakaus/impeccable`, `Leonxlnx/taste-skill`, `arham777/ui-ux-kit`, `vercel-labs/agent-skills`, and `Light0305/Light-UI-UX`).
 
 ![Cadra Telemetry Showcase](assets/cadra-dashboard.webp)
 *Rendered directly from `projects/cadra-dashboard/index.html` (0 violations, 0 warnings under `audit_anti_slop.py --strict`).*
 
 ---
 
-## Why `ui-ux-craft-pro` vs Upstream `ui-ux-pro-max-skill`
+## Unified 6-in-1 Skill Synthesis
 
-| Capability | Upstream `ui-ux-pro-max-skill` | `ui-ux-craft-pro` |
-|---|---|---|
-| **Packaging & Maintenance** | Duplicated mirrors (`.claude/`, `skills/`, `cli/`, `src/`, `stack/`) | **Single-source core (~2.2 MB total)** — zero drift, copy once into any agent's `skills/` directory |
-| **Layout Direction** | Generic static style/color tokens | **12 Spatial Stage Archetypes (`data/stage-archetypes.csv`)** rejecting flat `Hero + 3 boxes` clichés |
-| **Optical Geometry & Surfaces** | General prose guidelines | **Mathematical Optics (`references/craft-physics-and-optics.md`)**: $R_{\text{outer}} = R_{\text{inner}} + \text{Padding}$, `Surface 0 → 1 → 2` luminance ladder, `1px` specular bevels, `tabular-nums` |
-| **Motion Engineering** | Generic timing advice | **28 Living UI / GSAP Choreography Presets** + asymmetric deceleration curves (`cubic-bezier(0.16, 1, 0.3, 1)`) + zero `transition: all` |
-| **Pre-Delivery Quality Gate** | Prompt-based LLM `/design-review` | **Deterministic CLI Gate (`scripts/audit_anti_slop.py --strict`)**: fails on AI purple/indigo gradients, cliché copy/personas (`10x faster`, `SaaSify`, `Alex Chen`), robotic transitions, missing `tabular-nums`, dead static pages, cartoon SVG stages & WCAG regressions |
-| **Photorealistic Stages** | No cutout/QA pipeline | **4-Phase Pipeline + `scripts/extract_studio_cutout.py`**: `rembg` neural segmentation + `distance_transform_edt` de-haloing + dual-tone `--contact-sheet` + mandatory headless Chrome screenshot check |
+Instead of forcing developers to wire up six conflicting, multi-megabyte repositories with overlapping Node binaries or 50+ MB databases, `ui-ux-craft-pro` fuses their strongest engineering mechanisms into a single clean workflow:
+
+| Integrated Source | What We Adopted & Upgraded |
+|---|---|
+| **`nextlevelbuilder/ui-ux-pro-max-skill`** | Zero-network BM25 search engine (`search.py`) + expanded **12 Interactive Stage Archetypes** (`data/stage-archetypes.csv`) — stripped of duplicate platform mirrors (`.claude/`, `skills/`, `cli/`, `src/`, `stack/`). |
+| **`pbakaus/impeccable`** | **4 Visitor Modes** (`Persuade / Operate / Read / Experience`), **Design Steering Verbs** (`polish`, `bolder`, `quieter`, `distill`, `harden`, `critique`), **Cognitive Load** ($\le 4$ choices rule) + **Nielsen 10-Heuristic** rubric, and browser surface theming (`::selection`, `caret-color`, scrollbars). |
+| **`Leonxlnx/taste-skill`** | **6 Business/Trade Kinds** keeping effects/shaders strictly on tech/gaming/hardware surfaces while enforcing real photography on physical venues, `100svh` height containment at `700–800px`, plain 50/50 split hero rejection, and phantom horizontal-scrollbar fixes. |
+| **`arham777/ui-ux-kit`** | **Category-Reflex Test**, **1-Sentence Falsifiable Concept**, **OKLCH Derived Dark Mode** & **3-Move Typography** (`Personality → Category → Face`), plus **Two-Round Non-Destructive Redesign** and collision-aware popovers. |
+| **`Light0305/Light-UI-UX`** | **Vague Prompt → Physical CSS Translator**, **4 Stale Visual Clusters Denylist**, **19 Zero-Tolerance Bans** (no eyebrows/kickers, no nested cards, no 3px side stripes), **Hard Page Budgets** (Chanel's Rule), and **Dual-Track Latin vs. CJK Typography Law**. |
+| **`vercel-labs/agent-skills`** | **8 Priority Tiers of React/Next.js Performance** (waterfall elimination, barrel bans, Server Action auth, render-time derivation, `useRef` tick isolation), **Compound Component Composition**, **React 19** `ref`-as-prop/`use()`, and **9 CWV Levers** (`vercel-react-and-web-engineering.md`). |
+
+---
+
+## Why `ui-ux-craft-pro` vs Standalone Upstream Skills
+
+- **Deterministic Python `--strict` CLI Gate (`scripts/audit_anti_slop.py`):** Goes beyond prompt suggestions to fail CI/builds on AI purple/indigo gradients, hype copy/personas (`SaaSify`, `Alex Chen`, `10x faster`, `Streamline Your Workflow`, `Welcome back, Alex`), `SURFACE_SLOP` thick colored side stripes or neon glow halos, `PHANTOM_SCROLLBAR` horizontal tracks, `SKIPPED_HEADING` jumps, positive `tabindex`, missing `tabular-nums`, dead static pages, React 19 `forwardRef` usage, and WCAG regressions.
+- **Photorealistic Cutout Pipeline (`scripts/extract_studio_cutout.py`):** 4-Phase pipeline using `rembg` neural segmentation + `distance_transform_edt` RGB de-haloing + dual-tone `#ECECEA` / `#828891` contrast contact sheets + mandatory headless Chrome screenshot checks before delivery.
 
 ---
 
@@ -37,7 +46,7 @@ Built upon [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbu
 
 ## Quick Install (Works Across Modern AI Coding Tools)
 
-Clone this repo and copy only the runtime skill (`SKILL.md`, `data/`, `references/`, `scripts/`) into your tool's skills folder:
+Clone this repo and copy the single-source core (`SKILL.md`, `data/`, `references/`, `scripts/`) into your coding agent's skills directory:
 
 | Agent / Tool | Target Directory |
 |---|---|
@@ -67,7 +76,7 @@ Copy-Item SKILL.md, data, references, scripts -Destination $dst -Recurse -Force
    python scripts/search.py "keyboard focus modal" --domain ux
    python scripts/search.py "re-render list optimization" --stack nextjs
    ```
-3. **Run the Strict Anti-Slop & Accessibility Audit:**
+3. **Run the Strict Anti-Slop, Surface & Accessibility Audit:**
    ```bash
    python scripts/audit_anti_slop.py . --strict
    ```
@@ -84,6 +93,16 @@ Copy-Item SKILL.md, data, references, scripts -Destination $dst -Recurse -Force
 
 ---
 
+## Reference Manuals (`references/`)
+
+- [`taste-and-surface-gates.md`](references/taste-and-surface-gates.md) — Dual-axis surface/trade routing, 19 zero-tolerance bans, stale cluster denylist, 3-move OKLCH/typography rules, snap carousel CSS & steering/heuristic rubrics
+- [`vercel-react-and-web-engineering.md`](references/vercel-react-and-web-engineering.md) — 8 React/Next.js optimization tiers, compound component composition, React 19 APIs & Core Web Vitals levers
+- [`craft-physics-and-optics.md`](references/craft-physics-and-optics.md) — Concentric corner radius math, specular glass bevels, 3-tier luminance ladder & neural cutout pipeline
+- [`living-ui-choreography.md`](references/living-ui-choreography.md) — Blueprints 1–13 & spring physics presets
+- [`quick-reference.md`](references/quick-reference.md) & [`pro-rules.md`](references/pro-rules.md) — 119 UX guidelines & mobile/native pre-delivery checklists
+
+---
+
 ## Flagship Pure-Code Showcases (`projects/`)
 
 - [`projects/cadra-dashboard/`](projects/cadra-dashboard/index.html) — Living telemetry workspace, 10×10 dot-matrix capacity grids & diagonal staggered KPI architecture
@@ -94,11 +113,11 @@ Copy-Item SKILL.md, data, references, scripts -Destination $dst -Recurse -Force
 ## Repository Structure
 
 ```text
-├── SKILL.md         # Core skill prompt & 4-Pillar / 4-Phase engineering workflow
+├── SKILL.md         # Master workflow routing & 4-Pillar / 4-Phase engineering rules
 ├── data/            # 36 zero-network BM25 CSV tables (incl. stage-archetypes & motion)
-├── references/      # Craft physics/optics math, Living UI blueprints & UX checklists
+├── references/      # Taste/surface gates, Vercel React engineering, optics, choreography & UX
 ├── scripts/         # search.py, audit_anti_slop.py, extract_studio_cutout.py, validate-csv.py
-├── assets/          # Verified rendered preview WebP for documentation
+├── assets/          # Verified 1440×900 WebP showcase preview
 └── projects/        # Flagship zero-dependency HTML showcases passing --strict audit
 ```
 
