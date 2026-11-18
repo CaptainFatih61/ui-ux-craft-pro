@@ -8,7 +8,3 @@ __pycache__/
 Thumbs.db
 *.tmp
 *.log
-
-# Heavy / Brand-Specific Local Test Sandboxes (excluded from public repo)
-projects/nike-runway/
-projects/tondo-forno/

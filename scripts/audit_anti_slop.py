@@ -35,6 +35,10 @@ SLOP_COPYWRITING = [
     (re.compile(r"\bunleash\s+the\s+power\b", re.I), "Generic AI hype copy cliché ('Unleash the power')"),
     (re.compile(r"\brevolutionize\s+your\b", re.I), "Generic AI hype copy cliché ('Revolutionize your')"),
     (re.compile(r"\bsupercharge\s+your\b", re.I), "Generic AI hype copy cliché ('Supercharge your')"),
+    (re.compile(r"\bstreamline\s+your\s+workflow\b", re.I), "Generic AI hero headline cliché ('Streamline your workflow')"),
+    (re.compile(r"\blike\s+never\s+before\b", re.I), "Generic AI hype copy cliché ('Like never before')"),
+    (re.compile(r"\b(?:SaaSify|NexusAI|AetherFlow)\b", re.I), "Generic AI SaaS brand cliché"),
+    (re.compile(r"\bAlex\s+Chen\b", re.I), "Generic AI placeholder persona cliché ('Alex Chen')"),
 ]
 
 ROBOTIC_TRANSITIONS = [

@@ -1,15 +1,30 @@
 # UI/UX Craft Pro (`ui-ux-pro-max`)
 
-A high-craft design intelligence skill built for AI coding assistants to turn standard web, SaaS, dashboard, e-commerce, and app interfaces into crisp, tactile, production-grade UI — without generic AI slop.
+A lean, single-source design engineering skill for AI coding agents — upgrading standard web, SaaS, dashboard, e-commerce, and app interfaces with mathematical optical rules, interactive stage archetypes, asymmetric spring physics, and a deterministic `--strict` anti-slop audit gate.
 
-## Philosophy & Scope
+Built upon [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), stripped of multi-platform mirror bloat and hardened with strict optical, motion, cutout, and browser-verification gates.
 
-- **Core Focus (Standard UI Engineering)**: Enforces 3-tier surface elevation (`Surface 0 → 1 → 2`), concentric border-radius math ($R_{\text{outer}} = R_{\text{inner}} + \text{Padding}$), `1px` specular hairlines, `tabular-nums` metric stability, and asymmetric spring motion (`cubic-bezier(0.16, 1, 0.3, 1)`).
-- **4-Phase Pipeline for Physical Stages**: When bespoke product, culinary, fashion, or lookbook stages are requested, separates **Source Acquisition → Neural Cutout & Dual-Tone Contact-Sheet Gate → 1:1 State UI Engineering → Headless Browser Screenshot & Audit Gate** instead of faking complex photography with primitive vector shapes or naive color-keying.
+![Cadra Telemetry Showcase](assets/cadra-dashboard.webp)
+*Rendered directly from `projects/cadra-dashboard/index.html` (0 violations, 0 warnings under `audit_anti_slop.py --strict`).*
 
-## Searchable Local Catalog
+---
 
-- **12** interactive stage archetypes (`data/stage-archetypes.csv`)
+## Why `ui-ux-craft-pro` vs Upstream `ui-ux-pro-max-skill`
+
+| Capability | Upstream `ui-ux-pro-max-skill` | `ui-ux-craft-pro` |
+|---|---|---|
+| **Packaging & Maintenance** | Duplicated mirrors (`.claude/`, `skills/`, `cli/`, `src/`, `stack/`) | **Single-source core (~2.2 MB total)** — zero drift, copy once into any agent's `skills/` directory |
+| **Layout Direction** | Generic static style/color tokens | **12 Spatial Stage Archetypes (`data/stage-archetypes.csv`)** rejecting flat `Hero + 3 boxes` clichés |
+| **Optical Geometry & Surfaces** | General prose guidelines | **Mathematical Optics (`references/craft-physics-and-optics.md`)**: $R_{\text{outer}} = R_{\text{inner}} + \text{Padding}$, `Surface 0 → 1 → 2` luminance ladder, `1px` specular bevels, `tabular-nums` |
+| **Motion Engineering** | Generic timing advice | **28 Living UI / GSAP Choreography Presets** + asymmetric deceleration curves (`cubic-bezier(0.16, 1, 0.3, 1)`) + zero `transition: all` |
+| **Pre-Delivery Quality Gate** | Prompt-based LLM `/design-review` | **Deterministic CLI Gate (`scripts/audit_anti_slop.py --strict`)**: fails on AI purple/indigo gradients, cliché copy/personas (`10x faster`, `SaaSify`, `Alex Chen`), robotic transitions, missing `tabular-nums`, dead static pages, cartoon SVG stages & WCAG regressions |
+| **Photorealistic Stages** | No cutout/QA pipeline | **4-Phase Pipeline + `scripts/extract_studio_cutout.py`**: `rembg` neural segmentation + `distance_transform_edt` de-haloing + dual-tone `--contact-sheet` + mandatory headless Chrome screenshot check |
+
+---
+
+## Searchable Local Catalog (`data/`)
+
+- **12** interactive stage archetypes (`stage-archetypes.csv`)
 - **79** searchable visual styles (**50** active)
 - **192** product palettes & UI reasoning profiles
 - **74** curated font pairings & Google Font entries
@@ -18,74 +33,75 @@ A high-craft design intelligence skill built for AI coding assistants to turn st
 - **28** GSAP & Living UI choreography presets
 - **25** chart types across **22** frontend/mobile/desktop stacks
 
-## Quick Install (Single-Source Skill)
+---
 
-Clone or download this repository and copy its core skill files (`SKILL.md`, `data/`, `references/`, `scripts/`) into your AI tool's skills folder:
+## Quick Install (Works Across Modern AI Coding Tools)
 
-| Agent / Tool | Target Skill Directory |
+Clone this repo and copy only the runtime skill (`SKILL.md`, `data/`, `references/`, `scripts/`) into your tool's skills folder:
+
+| Agent / Tool | Target Directory |
 |---|---|
 | **Antigravity** | `~/.gemini/config/skills/ui-ux-pro-max/` |
 | **Claude Code** | `~/.claude/skills/ui-ux-pro-max/` |
-| **Cursor** | `.cursor/skills/ui-ux-pro-max/` (project) or `~/.cursor/skills/ui-ux-pro-max/` |
-| **Codex / Universal Agents** | `~/.codex/skills/ui-ux-pro-max/` |
-
-Example (PowerShell):
+| **Cursor** | `.cursor/skills/ui-ux-pro-max/` or `~/.cursor/skills/ui-ux-pro-max/` |
+| **Codex / Universal** | `~/.codex/skills/ui-ux-pro-max/` |
 
 ```powershell
-git clone https://github.com/Qionzy/ui-ux-craft-pro.git
+git clone https://github.com/CaptainFatih61/ui-ux-craft-pro.git
 $dst = "$env:USERPROFILE\.gemini\config\skills\ui-ux-pro-max"
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 Copy-Item SKILL.md, data, references, scripts -Destination $dst -Recurse -Force
 ```
 
-## CLI Tools (`scripts/`)
+---
 
-1. **Generate a full design system**:
+## CLI Toolkit (`scripts/`)
+
+1. **Generate a complete design system (with `--variance`, `--motion`, `--density` dials):**
    ```bash
    python scripts/search.py "fintech analytics dashboard" --design-system --variance 7 --motion 6 --density 8 -p "App"
    ```
-2. **Query a specific domain or stack**:
+2. **Search specific domains or stacks:**
    ```bash
    python scripts/search.py "fashion lookbook runway" --domain stage
    python scripts/search.py "keyboard focus modal" --domain ux
    python scripts/search.py "re-render list optimization" --stack nextjs
    ```
-3. **Run the zero-dependency Anti-Slop & Accessibility Audit**:
+3. **Run the Strict Anti-Slop & Accessibility Audit:**
    ```bash
    python scripts/audit_anti_slop.py . --strict
    ```
-4. **Extract neural studio cutouts (`rembg` + `distance_transform_edt` de-haloing + contrast contact sheet)**:
+4. **Extract clean neural studio cutouts (`rembg` + de-haloing + dual-tone contact sheet):**
    ```bash
    uv run --with pillow --with numpy --with opencv-python-headless --with rembg \
      --with onnxruntime --with scipy python scripts/extract_studio_cutout.py \
      input.png output.png --mode model --clean-leg-floor --contact-sheet check.png
    ```
-5. **Validate CSV datasets**:
+5. **Validate all 36 runtime CSV tables:**
    ```bash
    python scripts/validate-csv.py
    ```
 
-## Included Pure-Code UI Demos (`projects/`)
+---
 
-Lightweight, self-contained HTML/CSS/JS showcase interfaces audited with zero violations or warnings:
+## Flagship Pure-Code Showcases (`projects/`)
 
-- `projects/cadra-dashboard/` — Telemetry workspace & split-pillar UI
-- `projects/vertix-dashboard/` — Dense operational analytics dashboard
-- `projects/luxury-ecommerce/` — Editorial boutique & drawer checkout
-- `projects/healthcare-dashboard/` — Clinical patient & scheduling interface
-- `projects/portfolio-dark/` — Dark editorial studio showcase
-- `projects/saas-landing/` — Modern B2B SaaS landing architecture
+- [`projects/cadra-dashboard/`](projects/cadra-dashboard/index.html) — Living telemetry workspace, 10×10 dot-matrix capacity grids & diagonal staggered KPI architecture
+- [`projects/vertix-dashboard/`](projects/vertix-dashboard/index.html) — High-craft financial cockpit with clip-path pill navigation & frosted card controls
+
+---
 
 ## Repository Structure
 
 ```text
-├── SKILL.md         # Master skill instructions & 4-Pillar workflow
-├── data/            # 36 runtime CSV design/stack/stage tables
-├── references/      # Craft physics, optics, living choreography & UX checklists
-├── scripts/         # Search engine, anti-slop auditor, CSV validator & cutout CLI
-└── projects/        # Self-contained pure-HTML showcase demos
+├── SKILL.md         # Core skill prompt & 4-Pillar / 4-Phase engineering workflow
+├── data/            # 36 zero-network BM25 CSV tables (incl. stage-archetypes & motion)
+├── references/      # Craft physics/optics math, Living UI blueprints & UX checklists
+├── scripts/         # search.py, audit_anti_slop.py, extract_studio_cutout.py, validate-csv.py
+├── assets/          # Verified rendered preview WebP for documentation
+└── projects/        # Flagship zero-dependency HTML showcases passing --strict audit
 ```
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Built upon the open-source UI/UX Pro Max skill ecosystem.
+MIT — see [LICENSE](LICENSE). Built upon [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill).
